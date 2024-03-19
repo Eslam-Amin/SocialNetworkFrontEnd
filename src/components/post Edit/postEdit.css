@@ -1,0 +1,76 @@
+.postEditWrapper{
+    position: absolute;
+    width: 80%;
+    
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+    display: flex;
+    border-radius: 10px;
+    flex-direction: row;
+    background-color: white;
+   -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+    box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+    z-index: 999;
+              
+@media only screen and (max-width:480px) {
+    margin-left: 20px;
+    margin-right: auto;
+    width: 90%;    
+}
+}
+
+
+.editWrapper {
+    width: 100%;
+    padding: 10px;
+   
+
+    @media only screen and (max-width:480px) {
+        margin: 10px;
+    }
+}
+.editInput {
+    border: none;
+    min-height: 75px;
+    width: 100%;
+}
+
+
+.btn{
+ border: none;
+    padding: 7px;
+    border-radius: 5px;
+    font-weight: 500;
+    margin-right: 20px;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+
+    width: 15%;
+    @media only screen and (max-width:480px) {
+        margin: auto;
+        width: 25%;
+
+    }
+}
+
+.cancelBtn{
+    background-color: red;
+}
+.shareBtn {
+    background-color: green;
+
+}
+
+.editBottom{
+    display: flex;
+    justify-content: flex-end;
+    justify-items: flex-end;
+              
+@media only screen and (max-width:480px) {
+    justify-content: center;
+    justify-items: center;
+}
+
+}

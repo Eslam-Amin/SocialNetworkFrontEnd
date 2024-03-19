@@ -1,0 +1,113 @@
+import Topbar from "../../components/topbar/Topbar"
+import Sidebar from "../../components/sidebar/Sidebar"
+import Feed from "../../components/feed/Feed"
+import Rightbar from "../../components/rightbar/Rightbar"
+import { useState, useEffect, useContext } from "react"
+import { useParams } from "react-router";
+import { Edit, Star } from '@mui/icons-material'
+
+import "./profile.css"
+import axios from 'axios';
+import { AuthContext } from "../../context/AuthContext"
+
+
+
+function Profile() {
+    const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
+    const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
+
+
+
+    const username = useParams().username;
+    const [user, setUser] = useState({})
+    const [option, setOption] = useState("feed");
+    const { user: currentUser } = useContext(AuthContext);
+    const smallWindow = window.matchMedia("(max-width:480px)").matches;
+    useEffect(() => {
+        const fetchUser = async () => {
+
+            const res = await axios.get(`${HOST}/users?username=${username}`)
+            setUser(res.data);
+        };
+        fetchUser();
+    }, [username]);
+
+    const handleOptionClick = (option) => {
+        setOption(option)
+    }
+
+    return (
+        <>
+            <Topbar profile={true} />
+            <div className="profile">
+
+                <Sidebar />
+
+                <div className="profileRight">
+                    <div className="profileRightTop">
+                        <div className="profileCover">
+                            <img src={user.coverPicture ? `${PF + user.coverPicture}` : PF + "cover/No_Cover.jpg"} alt="" className="profileCoverImg" />
+                            <img src={user.profilePicture ? `${PF + user.profilePicture}` : PF + "person/noProfile.png"} alt="" className="profileUserImg" />
+
+                        </div>
+
+                        <div className="profileInfo">
+                            <div className="profileName">
+                                <h4 className="profileInfoName">{user.name}
+                                </h4>
+                                {user.isAdmin ?
+                                    <span title="Verified Badge">
+                                        <Star htmlColor="#1877f2" className="verifiedBadge" />
+                                    </span> : ""
+
+                                }
+                            </div>
+                            <span className="profileInfoDesc">
+                                {user.desc}
+                                {user?._id === currentUser?._id ?
+                                    <Edit style={{ fontSize: "15px", marginLeft: "10px", cursor: "pointer" }} /> : ""
+                                }
+                            </span>
+                        </div>
+
+
+                    </div>
+
+                    <div className="profileOptions">
+
+                        <span className="links" onClick={() => handleOptionClick("feed")}>Feed</span>
+                        <span className="links" onClick={() => handleOptionClick("personalInfo")}>Personal Information</span>
+                    </div>
+                    <div className="profileRightBottom">
+
+
+                        {
+
+                            !smallWindow ?
+                                (
+                                    <>
+                                        <Feed username={username} />
+                                        <Rightbar user={user} />
+                                    </>
+                                )
+                                : option === "feed" ?
+                                    <Feed username={username} />
+                                    :
+                                    <Rightbar user={user} />
+                        }
+
+
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </>
+    )
+
+}
+
+
+export default Profile
