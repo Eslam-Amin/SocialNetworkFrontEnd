@@ -18,7 +18,7 @@ function PostEdit({ post, cancelPostEdit, user }) {
     const handleEditPost = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(HOST + "/posts/" + post._id, { userId: user._id, content: newContent.current.value });
+            await axios.put(HOST + "/posts/" + post._id, { userId: user._id, content: newContent.current.value.trim() });
             cancelPostEdit();
             enqueueSnackbar("post Edited Successfully! ", { variant: "success" })
 

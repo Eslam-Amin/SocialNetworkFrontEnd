@@ -21,7 +21,7 @@ function Share() {
         if (content.current.value !== "") {
             const newPost = {
                 userId: user._id,
-                content: content.current.value,
+                content: content.current.value.trim(),
             }
             try {
 

@@ -141,7 +141,7 @@ function Rightbar({ user }) {
                             <Link to={"/" + friend.username} key={friend._id} style={{ textDecoration: "none", color: "black" }}>
 
                                 <div className="rightbarFollowing" >
-                                    <img loading="lazy" src={friend.profilePicture ? `${PF + friend.profilePicture}` : `${PF}/person/1.jpeg`} alt="" className="rightbarFollowingImg" />
+                                    <img loading="lazy" src={friend.profilePicture ? `${PF + friend.profilePicture}` : `${PF}/person/noProfile.png`} alt="" className="rightbarFollowingImg" />
                                     <span className="rightbarFollowingName">{friend.name}</span>
                                 </div>
                             </Link>
