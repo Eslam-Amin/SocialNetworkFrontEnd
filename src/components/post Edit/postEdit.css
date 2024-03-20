@@ -31,9 +31,14 @@
     }
 }
 .editInput {
+    margin: 10px;
     border: none;
+
     min-height: 75px;
     width: 100%;
+}
+.editInput:focus{
+    outline: none;
 }
 
 

@@ -111,6 +111,23 @@ height: 10px;
     outline: none;
 }
 
+.passwordInput{
+    width: 95%;
+}
+
+.passwordField{
+    position: relative;
+    align-items: center;
+    display: flex;
+
+}
+
+
+.visibleIcon{
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+}
 
 .loginBtn{
     height: 45px;

@@ -86,7 +86,7 @@
 
 .dividedDivs{
     display: flex;
-    width: 50%;
+    width: 100%;
     flex-direction: row;
     
 @media only screen and (max-width:480px) {
@@ -110,6 +110,27 @@
     align-self: center;
 }   
 }
+
+
+.passwordInput{
+    width: 95%;
+}
+
+.passwordField{
+    position: relative;
+    align-items: center;
+    display: flex;
+
+}
+
+
+.visibleIcon{
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+    z-index: 9999;
+}
+
 
 .registerBtn{
     height: 45px;

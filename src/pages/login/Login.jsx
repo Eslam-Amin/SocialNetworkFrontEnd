@@ -2,10 +2,12 @@ import "./login.css";
 import { useSnackbar } from 'notistack';
 
 
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import { CircularProgress } from "@material-ui/core";
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -14,6 +16,7 @@ function Login() {
     const email = useRef();
     const { enqueueSnackbar } = useSnackbar();
 
+    const [passwordVisible, setPasswordVisible] = useState(false);
     const password = useRef();
     const { user, isFetching, error, dispatch } = useContext(AuthContext);
     const handleRegisterClick = (e) => {
@@ -28,6 +31,19 @@ function Login() {
         if (res)
             enqueueSnackbar(errMsg, { variant: 'error' });
     }
+
+
+
+    const passwordVisibility = () => {
+        if (password.current.type == "password")
+            password.current.type = "text";
+        else
+            password.current.type = "password";
+
+        setPasswordVisible(!passwordVisible)
+    }
+
+
     return (
         <div className="login">
             <div className="loginWrapper" >
@@ -43,8 +59,16 @@ function Login() {
 
                         <input type="email" placeholder="Email"
                             className="loginInput" ref={email} required />
-                        <input type="password" placeholder="Password"
-                            className="loginInput" ref={password} required minLength={6} />
+                        <span className="passwordField">
+                            <input type="password" placeholder="Password"
+                                className="loginInput passwordInput" ref={password} required minLength={6} />
+                            {
+                                passwordVisible ?
+                                    <VisibilityOffIcon className="visibleIcon" onClick={passwordVisibility} />
+                                    :
+                                    <VisibilityIcon className="visibleIcon" onClick={passwordVisibility} />
+                            }
+                        </span>
                         <span className="loginForget">Forget Password?</span>
                         <button className="loginBtn" disabled={isFetching}>
                             {isFetching ?

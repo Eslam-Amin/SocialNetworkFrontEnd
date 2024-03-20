@@ -17,13 +17,17 @@ function PostEdit({ post, cancelPostEdit, user }) {
 
     const handleEditPost = async (e) => {
         e.preventDefault();
-        try {
-            await axios.put(HOST + "/posts/" + post._id, { userId: user._id, content: newContent.current.value.trim() });
-            cancelPostEdit();
-            enqueueSnackbar("post Edited Successfully! ", { variant: "success" })
+        if (newContent.current.value.trim().length !== 0) {
+            try {
+                await axios.put(HOST + "/posts/" + post._id, { userId: user._id, content: newContent.current.value.trim() });
+                cancelPostEdit();
+                enqueueSnackbar("post Edited Successfully! ", { variant: "success" })
 
-        } catch (err) {
-            console.log(err);
+            } catch (err) {
+                console.log(err);
+            }
+        } else {
+            enqueueSnackbar("You can't share an empty post", { variant: "info" })
         }
 
     }
@@ -31,7 +35,7 @@ function PostEdit({ post, cancelPostEdit, user }) {
 
         <div className="postEditWrapper">
             <form className="editWrapper">
-                <textarea className="editInput" defaultValue={post.content} ref={newContent} />
+                <textarea className="editInput" autoFocus defaultValue={post.content} ref={newContent} />
                 <div className="editBottom">
                     <button className="shareBtn btn" onClick={handleEditPost}>Save</button>
                     <button className="cancelBtn btn" onClick={handleCancel}>Cancel</button>
