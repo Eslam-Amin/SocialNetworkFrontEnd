@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import "./postEdit.css"
 import axios from "axios";
 
-function PostEdit({ post, cancelPostEdit, user }) {
+function PostEdit({ post, cancelPostEdit, user, refreshFeed }) {
     const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
     const newContent = useRef();
     const { enqueueSnackbar } = useSnackbar();
@@ -22,7 +22,7 @@ function PostEdit({ post, cancelPostEdit, user }) {
                 await axios.put(HOST + "/posts/" + post._id, { userId: user._id, content: newContent.current.value.trim() });
                 cancelPostEdit();
                 enqueueSnackbar("post Edited Successfully! ", { variant: "success" })
-
+                refreshFeed();
             } catch (err) {
                 console.log(err);
             }

@@ -5,7 +5,6 @@ import axios from "axios";
 import { format } from "timeago.js"
 import { Link } from "react-router-dom";
 import { AuthContext } from './../../context/AuthContext';
-import DropdownMenu from "../DropdownMenu/DropdownMenu";
 import PostLikes from "../post Likes/PostLikes";
 import PostEdit from "../post Edit/PostEdit";
 import { useSnackbar } from 'notistack';
@@ -13,7 +12,7 @@ import { useSnackbar } from 'notistack';
 
 
 
-function Post({ post }) {
+function Post({ post, refreshFeed }) {
     const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
     const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
@@ -85,8 +84,6 @@ function Post({ post }) {
     })
 
 
-
-
     const handleMoreVert = (e) => {
         //e.preventDefault();
         setMenuOpened(!menuOpened);
@@ -112,9 +109,10 @@ function Post({ post }) {
             try {
                 await axios.delete(`${HOST}/posts/${post._id}`, { data: { userId: currentUser._id } });
                 enqueueSnackbar("post Deleted Successfully! ", { variant: "success" })
+                refreshFeed();
             } catch (err) {
                 enqueueSnackbar(err.response.data, { variant: 'error' });
-                console.log(err.response.data);
+                window.location.reload();
             }
         }
         else {
@@ -133,6 +131,7 @@ function Post({ post }) {
         if (post.userId === currentUser._id) {
             setEditFlagClicked(!editFlagClicked);
             setMenuOpened(false)
+
         }
         else {
             enqueueSnackbar("you can only edit your posts", { variant: 'error' });
@@ -149,10 +148,10 @@ function Post({ post }) {
                             <span className="postUsername">
 
                                 {user.name}
-                                {user.isAdmin ?
+                                {user.isAdmin &&
                                     <span title="Verified Badge">
                                         <Star htmlColor="#1877f2" className="verifiedBadge" style={{ fontSize: smallWindow ? "1rem" : "1.2rem" }} />
-                                    </span> : ""
+                                    </span>
 
                                 }</span>
 
@@ -162,7 +161,7 @@ function Post({ post }) {
                     </div>
                     <div className="postTopRight" ref={menuRef}>
                         <MoreVert className="postMoreVert" onClick={handleMoreVert} />
-                        {menuOpened ?
+                        {menuOpened &&
 
                             /*<DropdownMenu post={post} />*/
                             <div className="dropdownProfile">
@@ -173,17 +172,16 @@ function Post({ post }) {
 
                                 </ul>
 
-                            </div> : ""}
+                            </div>}
                     </div>
                 </div>
                 <div className="postCenter">
                     {
-                        editFlagClicked ?
-                            <span ref={postEditRef}>
-                                <PostEdit post={post} cancelPostEdit={cancelPostEdit} user={currentUser} />
-                            </span>
-                            :
-                            ""
+                        editFlagClicked &&
+                        <span ref={postEditRef}>
+                            <PostEdit post={post} cancelPostEdit={cancelPostEdit} user={currentUser} refreshFeed={refreshFeed} />
+                        </span>
+
                     }
 
                     <span className="postText">{post?.content} </span>
@@ -205,17 +203,9 @@ function Post({ post }) {
                                 <img className="reactIcon" src={`${PF}liked.png`} alt="" onClick={likeHandler} />
                                 :
                                 <img className="reactIcon" src={`${PF}like.png`} alt="" onClick={likeHandler} />
-
-
-
                         }
                         {/*<img className="reactIcon" src={`${PF}heart.png`} alt="" onClick={likeHandler} />*/}
                         <span className="postReactCounter" onClick={getPostLikes}>{like} People Like it</span>
-
-
-
-
-
 
                     </div>
                     <div className="postBottomRight">
@@ -223,8 +213,6 @@ function Post({ post }) {
                     </div>
 
                 </div>
-
-
             </div>
         </div>
     )

@@ -1,4 +1,4 @@
-import { useContext, useRef, useEffect } from "react";
+import { useContext, useRef } from "react";
 import "./share.css"
 import { useSnackbar } from 'notistack';
 
@@ -6,8 +6,7 @@ import { PermMedia, Label, Room, EmojiEmotions } from '@mui/icons-material';
 import { AuthContext } from "../../context/AuthContext";
 import axios from 'axios';
 
-
-function Share() {
+function Share({ refreshFeed }) {
     const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
     const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
     const { enqueueSnackbar } = useSnackbar();
@@ -16,8 +15,8 @@ function Share() {
     const content = useRef();
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
 
-
     const handleShare = async (e) => {
+
         e.preventDefault();
         if (content.current.value.trim().length !== 0) {
             const newPost = {
@@ -25,9 +24,10 @@ function Share() {
                 content: content.current.value.trim(),
             }
             try {
-
                 await axios.post(HOST + "/posts", newPost);
                 content.current.value = "";
+                refreshFeed();
+
             } catch (err) {
 
             }
@@ -35,7 +35,6 @@ function Share() {
         else {
             enqueueSnackbar("You can't share an empty post", { variant: "info" })
         }
-
     }
 
 

@@ -1,4 +1,3 @@
-
 import Online from "../Online/Online"
 import Advertisement from '../advertisement/Advertisement';
 import { Users } from './../../dummyData';
@@ -6,8 +5,9 @@ import axios from "axios";
 import { useState, useEffect, useContext } from 'react';
 import { Link } from "react-router-dom";
 import { AuthContext } from './../../context/AuthContext';
-import { Add, Remove, Logout, CabinSharp } from "@mui/icons-material"
+import { Add, Remove, Logout } from "@mui/icons-material"
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import "./rightbar.css"
 
 
@@ -17,71 +17,8 @@ function Rightbar({ user }) {
     const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
     const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
-    const [friends, setFriends] = useState([]);
-    const [cUser, setCuser] = useState([]);
-    const { user: currentUser, dispatch } = useContext(AuthContext);
+    const { enqueueSnackbar } = useSnackbar();
 
-    const [followed, setFollowed] = useState(currentUser.followings.includes(user?._id));
-    const navigate = useNavigate();
-
-
-
-
-
-    useEffect(() => {
-        const getUser = async () => {
-            try {
-                const res = await axios.get(HOST + "/users?userId=" + currentUser._id);
-                setCuser(res.data);
-            } catch (err) {
-
-            }
-        }
-        getUser();
-        setFollowed(cUser.followings?.includes(user?._id));
-    }, [cUser.followings, user?._id])
-
-    useEffect(() => {
-        const getFriends = async () => {
-            try {
-                const res = await axios.get(HOST + "/users/friends/" + user?._id);
-                setFriends(res.data);
-            } catch (err) {
-                console.log(err)
-            }
-        }
-        getFriends();
-    }, [user?._id, friends])
-
-
-
-    const handleFollowClick = async () => {
-        try {
-            if (followed) {
-                const updatedUser = await axios.put(HOST + "/users/" + user._id + "/unfollow", { userId: currentUser._id });
-                //dispatch({ type: "UNFOLLOW", payload: user._id });
-                dispatch({ type: "UPDATE_USER", payload: updatedUser.data.updatedUser })
-            }
-            else {
-                const updatedUser = await axios.put(HOST + "/users/" + user._id + "/follow", { userId: currentUser._id });
-                //dispatch({ type: "FOLLOW", payload: user._id });
-                dispatch({ type: "UPDATE_USER", payload: updatedUser.data.updatedUser })
-            }
-            //window.location.reload();
-
-        } catch (err) {
-            console.log(err + " in HandleFollowClick in rightbar line 42 ")
-        }
-        console.log(followed + " At 55")
-    };
-
-
-    const handleLogOutClick = (e) => {
-
-        localStorage.clear();
-        navigate("/")
-        window.location.reload();
-    }
     const HomeRightbar = () => {
         return (
             <>
@@ -99,22 +36,71 @@ function Rightbar({ user }) {
     };
 
     const ProfileRightbar = () => {
+        const [friends, setFriends] = useState([]);
+
+        const { user: currentUser, dispatch } = useContext(AuthContext);
+        const navigate = useNavigate();
+        const [followed, setFollowed] = useState(currentUser.followings?.includes(user?._id));
+
+
+
+
+        useEffect(() => {
+            const getFriends = async () => {
+                try {
+                    const res = await axios.get(HOST + "/users/friends/" + user?._id);
+                    setFriends(res.data);
+                    let flag = res.data.filter((friend) =>
+                        friend._id === currentUser._id)
+                    flag.length === 0 ? setFollowed(false) : setFollowed(true)
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+            getFriends();
+        }, []);
+
+
+
+
+        const handleFollowClick = async () => {
+            try {
+                if (followed) {
+                    const updatedUser = await axios.put(HOST + "/users/" + user._id + "/unfollow", { userId: currentUser._id });
+                    dispatch({ type: "UPDATE_USER", payload: updatedUser.data.updatedUser });
+                }
+                else {
+                    const updatedUser = await axios.put(HOST + "/users/" + user._id + "/follow", { userId: currentUser._id });
+                    dispatch({ type: "UPDATE_USER", payload: updatedUser.data.updatedUser });
+                }
+                setFollowed(!followed)
+            } catch (err) {
+                enqueueSnackbar("User Already " + followed ? "Followed" : "Unfollowed", { variant: "info" })
+                console.log(err + " in HandleFollowClick in rightbar line 42 ")
+            }
+        };
+
+
+        const handleLogOutClick = (e) => {
+            localStorage.clear();
+            navigate("/")
+            window.location.reload();
+        }
 
 
         return (
             <>
                 <div className="dividedDivsInRightbar">
-                    {user?.username !== currentUser.username && (
+                    {user?.username !== currentUser.username ?
                         <button className="rightbarFollowBtn" onClick={handleFollowClick}>
                             {followed ? "Unfollow" : "Follow"}
                             {followed ? <Remove /> : <Add />}
                         </button>
-                    )}
-                    {user?.username === currentUser.username && (
+                        :
                         <button className="rightbarLogoutBtn" onClick={handleLogOutClick}>
                             Logout <Logout />
                         </button>
-                    )}
+                    }
                     <h4 className="rightbarTitle">User Information</h4>
 
                 </div >

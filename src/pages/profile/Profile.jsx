@@ -25,7 +25,6 @@ function Profile() {
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
     useEffect(() => {
         const fetchUser = async () => {
-
             const res = await axios.get(`${HOST}/users?username=${username}`)
             setUser(res.data);
         };
@@ -46,26 +45,25 @@ function Profile() {
                 <div className="profileRight">
                     <div className="profileRightTop">
                         <div className="profileCover">
-                            <img src={user.coverPicture ? `${PF + user.coverPicture}` : PF + "cover/No_Cover.jpg"} alt="" className="profileCoverImg" />
-                            <img src={user.profilePicture ? `${PF + user.profilePicture}` : PF + "person/noProfile.png"} alt="" className="profileUserImg" />
-
+                            <img src={user.coverPicture ? `${PF + user.coverPicture}` : PF + "cover/No_Cover.jpg"} alt="" className="profileCoverImg" loading="lazy" />
+                            <img src={user.profilePicture ? `${PF + user.profilePicture}` : PF + "person/noProfile.png"} alt="" className="profileUserImg" loading="lazy" />
                         </div>
 
                         <div className="profileInfo">
                             <div className="profileName">
                                 <h4 className="profileInfoName">{user.name}
                                 </h4>
-                                {user.isAdmin ?
+                                {user.isAdmin &&
                                     <span title="Verified Badge">
                                         <Star htmlColor="#1877f2" className="verifiedBadge" />
-                                    </span> : ""
+                                    </span>
 
                                 }
                             </div>
                             <span className="profileInfoDesc">
                                 {user.desc}
-                                {user?._id === currentUser?._id ?
-                                    <Edit style={{ fontSize: "15px", marginLeft: "10px", cursor: "pointer" }} /> : ""
+                                {user?._id === currentUser?._id &&
+                                    <Edit style={{ fontSize: "15px", marginLeft: "10px", cursor: "pointer" }} />
                                 }
                             </span>
                         </div>
