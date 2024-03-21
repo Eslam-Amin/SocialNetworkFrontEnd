@@ -144,7 +144,7 @@ function Post({ post, refreshFeed }) {
                 <div className="postTop">
                     <div className="postTopLeft">
                         <Link to={`/${user.username}`} className="linkClass">
-                            <img loading="lazy" src={PF + "/" + user.profilePicture || PF + "person/noProfile.png"} className="postProfileImg" alt="" />
+                            <img loading="lazy" src={user.profilePicture ? PF + "/" + user.profilePicture : PF + "/person/noProfile.png"} className="postProfileImg" alt="" />
                             <span className="postUsername">
 
                                 {user.name}

@@ -65,14 +65,17 @@ function Rightbar({ user }) {
 
         const handleFollowClick = async () => {
             try {
+                let updatedUser = "";
                 if (followed) {
-                    const updatedUser = await axios.put(HOST + "/users/" + user._id + "/unfollow", { userId: currentUser._id });
+                    updatedUser = await axios.put(HOST + "/users/" + user._id + "/unfollow", { userId: currentUser._id });
                     dispatch({ type: "UPDATE_USER", payload: updatedUser.data.updatedUser });
+
                 }
                 else {
-                    const updatedUser = await axios.put(HOST + "/users/" + user._id + "/follow", { userId: currentUser._id });
+                    updatedUser = await axios.put(HOST + "/users/" + user._id + "/follow", { userId: currentUser._id });
                     dispatch({ type: "UPDATE_USER", payload: updatedUser.data.updatedUser });
                 }
+                localStorage.setItem("user", JSON.stringify(updatedUser.data.updatedUser));
                 setFollowed(!followed)
             } catch (err) {
                 enqueueSnackbar("User Already " + followed ? "Followed" : "Unfollowed", { variant: "info" })

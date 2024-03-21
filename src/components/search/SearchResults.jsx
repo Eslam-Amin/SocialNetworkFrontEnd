@@ -5,22 +5,21 @@ import "./searchResults.css"
 
 
 
-function SearchResults({ searchResult }) {
+function SearchResults({ searchResult, search }) {
     const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
-
-
-    console.log(searchResult);
+    console.log(search)
     return (
 
         <div className="searchResults" style={{ display: searchResult ? "block" : "none" }} >
 
             {
-                searchResult &&
+
+                (search.trim() && searchResult) &&
                 searchResult.map((user) => (
                     <Link to={`/${user.username}`} className="linkClass " key={user._id}>
                         <ul className="searchItem">
                             <li>
-                                <img src={PF + user.profilePicture} className="searchImg" alt="profile picture" />
+                                <img src={user.profilePicture ? PF + user.profilePicture : PF + "/person/noProfile.png"} className="searchImg" alt="profile picture" />
                                 {user.name}
                             </li>
                         </ul>

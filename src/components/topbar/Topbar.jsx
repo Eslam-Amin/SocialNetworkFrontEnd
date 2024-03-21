@@ -24,7 +24,6 @@ function Topbar({ profile }) {
         }
         else {
             try {
-                console.log(username.current.value, searchOpened)
                 const res = await axios.get(HOST + "/users/search?username=" + username.current.value);
                 setSearchResult(res.data);
                 setSearchOpened(true);
@@ -35,6 +34,8 @@ function Topbar({ profile }) {
             }
         }
     }
+
+
 
     useEffect(() => {
         const closeOutSide = (e) => {
@@ -81,11 +82,12 @@ function Topbar({ profile }) {
                         ref={username}
                         onChange={searchUser}
                         onFocus={searchUser}
+
                     />
                 </div>
                 {
-                    searchOpened ?
-                        <SearchResults searchResult={searchResult} ref={searchRef} /> : ""
+                    (searchOpened && username.current.value.trim() !== "") &&
+                    <SearchResults searchResult={searchResult} ref={searchRef} search={username.current.value} />
                 }
 
             </div>
