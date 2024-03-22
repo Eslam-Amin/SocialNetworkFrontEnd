@@ -51,7 +51,41 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 50%;
+
 }
+.editDescInput {
+    height: 30px;
+    border-radius: 10px;
+    border: 1px solid gray;
+    font-size: 18px;
+    padding-left: 20px;
+    margin: 5px;
+    background-color: transparent;
+    
+@media only screen and (max-width:480px) {
+    height: 25px;
+    width: 95%;
+}   
+}
+
+.editDescInput:focus{
+    outline: none;
+}
+
+.editDescDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    margin-left: 20px;
+ 
+@media only screen and (max-width:480px) {
+    
+}
+}
+
+
+
 
 
 .profileRightBottom {

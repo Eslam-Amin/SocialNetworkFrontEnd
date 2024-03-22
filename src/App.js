@@ -5,6 +5,7 @@ import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-d
 import Profile from './pages/profile/Profile';
 import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
+import UpdateUserInfo from './components/edit user info/UpdateUserInfo';
 
 function App() {
 
@@ -17,7 +18,7 @@ function App() {
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
         <Route path="/register" element={user ? <Navigate to="/" /> : <Register />} />
         <Route path="/:username" element={< Profile />} />
-
+        <Route path="/update_user_info/:username" element={< UpdateUserInfo />} />
 
       </Routes>
     </Router>

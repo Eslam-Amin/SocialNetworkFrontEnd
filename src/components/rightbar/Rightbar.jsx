@@ -5,7 +5,7 @@ import axios from "axios";
 import { useState, useEffect, useContext } from 'react';
 import { Link } from "react-router-dom";
 import { AuthContext } from './../../context/AuthContext';
-import { Add, Remove, Logout } from "@mui/icons-material"
+import { Add, Remove, Logout, Edit } from "@mui/icons-material"
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import "./rightbar.css"
@@ -90,6 +90,9 @@ function Rightbar({ user }) {
             window.location.reload();
         }
 
+        const gotoUpdate = () => {
+            navigate("/update_user_info/" + currentUser.username)
+        }
 
         return (
             <>
@@ -104,8 +107,12 @@ function Rightbar({ user }) {
                             Logout <Logout />
                         </button>
                     }
-                    <h4 className="rightbarTitle">User Information</h4>
+                    <h4 className="rightbarTitle">User Information
+                        {user?._id === currentUser?._id &&
+                            <Edit style={{ fontSize: "15px", marginLeft: "10px", cursor: "pointer" }} onClick={gotoUpdate} />
+                        }
 
+                    </h4>
                 </div >
                 <div className="rightbarInfo">
                     <div className="rightbarInfoItem">

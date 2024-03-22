@@ -32,20 +32,21 @@ function Post({ post, refreshFeed }) {
     let menuRef = useRef();
     let postLikesRef = useRef();
     let postEditRef = useRef();
-
-    useEffect(() => {
-        setIsLiked(post.likes.includes(currentUser._id));
-    }, [currentUser._id, post.likes])
+    /*
+        useEffect(() => {
+            setIsLiked(post.likes.includes(currentUser._id));
+            console.log(post.likes);
+        }, [currentUser._id, post.likes, like])
+        */
 
     const likeHandler = async () => {
         try {
             await axios.put(HOST + "/posts/" + post._id + "/like", { userId: currentUser._id })
-            setLike(isLiked ? like - 1 : like + 1)
-
+            setLike(isLiked ? like - 1 : like + 1);
+            setIsLiked(!isLiked);
         } catch (err) {
 
         }
-        console.log(isLiked);
     }
 
     useEffect(() => {
@@ -60,7 +61,7 @@ function Post({ post, refreshFeed }) {
 
     useEffect(() => {
         const closeOutSide = (e) => {
-            if (!menuRef.current.contains(e.target))
+            if (!menuRef.current?.contains(e.target))
                 setMenuOpened(false);
 
         };
@@ -190,10 +191,10 @@ function Post({ post, refreshFeed }) {
                     }
 
                     {
-                        postLikesOpened ?
-                            <div ref={postLikesRef}>
-                                <PostLikes postUsersLikes={postUsersLikes} />
-                            </div> : ""
+                        postLikesOpened &&
+                        <div ref={postLikesRef}>
+                            <PostLikes postUsersLikes={postUsersLikes} />
+                        </div>
                     }
                 </div>
                 <div className="postBottom">

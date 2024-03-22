@@ -1,7 +1,5 @@
 import "./postLikes.css"
-import axios from "axios";
-import { Link, redirect } from "react-router-dom"
-import CloseIcon from '@mui/icons-material/Close';
+import { Link } from "react-router-dom"
 function PostLikes({ postUsersLikes }) {
     const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
 
@@ -18,7 +16,7 @@ function PostLikes({ postUsersLikes }) {
                     <Link to={`/${user?.username}`} className="linkClass">
                         <ul key={user._id} className="likeListData">
                             <li>
-                                <img src={PF + user.profilePicture} className="userLikeImg" />
+                                <img src={user.profilePicture ? PF + user.profilePicture : PF + "/person/noProfile.png"} className="userLikeImg" alt="" />
                             </li>
                             <li className="userLikeName">{user.name}</li>
                         </ul>

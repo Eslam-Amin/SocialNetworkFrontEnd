@@ -149,7 +149,7 @@ function Register() {
                                 className="registerInput" />
                         </div>
                         <select name="relationship" id="relationship" ref={relationship} required
-                            className="registerInput" placeholder="select your relationship">
+                            selected className="registerInput" placeholder="select your relationship">
                             <option value="0" disabled>-- Select your Relationship --</option>
                             <option value="1">Engaged</option>
                             <option value="2">Single</option>
