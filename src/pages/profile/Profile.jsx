@@ -24,7 +24,7 @@ function Profile() {
     const { enqueueSnackbar } = useSnackbar();
 
 
-    const editDesc = useRef();
+    const editDescRef = useRef();
     const [openedDescEdit, setOpenedDescEdit] = useState(false);
     const username = useParams().username;
     const [user, setUser] = useState({})
@@ -33,15 +33,14 @@ function Profile() {
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
     useEffect(() => {
         const fetchUser = async () => {
-            const res = await axios.get(`${HOST}/users?username=${username}`)
+            const res = await axios.get(`${HOST}/users?username=${username}`);
+
             setUser(res.data);
         };
         setOpenedDescEdit(false);
         fetchUser();
     }, [username]);
     const [userDesc, setUserDesc] = useState(user.desc);
-
-
     useEffect(() => {
         setUserDesc(user.desc)
     }, [user])
@@ -58,10 +57,12 @@ function Profile() {
 
     const handleDescEdit = async () => {
         try {
-            await axios.put(HOST + "/users/updateDesc/" + user._id, { desc: editDesc.current.value.trim() !== "" ? editDesc.current.value.trim() : user.desc });
+            const res = await axios.put(HOST + "/users/updateDesc/" + user._id, { desc: editDescRef.current.value.trim() !== "" ? editDescRef.current.value.trim() : user.desc });
             enqueueSnackbar("Description Updated Successfully!", { variant: "success" })
             setOpenedDescEdit(false);
-            setUserDesc(editDesc.current.value.trim());
+            setUserDesc(editDescRef.current.value.trim());
+            dispatch({ type: "UPDATE_USER", payload: res.data.updatedUser });
+            localStorage.setItem("user", JSON.stringify(res.data.updatedUser))
 
         } catch (err) {
             enqueueSnackbar(err, { variant: "error" })
@@ -111,8 +112,8 @@ function Profile() {
 
                                     <div className="editDescDiv" >
                                         <input type="text" className="editDescInput"
-                                            autoFocus
-                                            placeholder={userDesc} ref={editDesc} />
+                                            autoFocus defaultValue={userDesc}
+                                            placeholder={userDesc} ref={editDescRef} />
                                         <CheckCircleRoundedIcon htmlColor="green" onClick={handleDescEdit}
                                             style={{ fontSize: smallWindow && "1.5rem", margin: smallWindow && "5px" }} />
                                         <CancelRoundedIcon htmlColor="red" onClick={handleCancelDescEdit}

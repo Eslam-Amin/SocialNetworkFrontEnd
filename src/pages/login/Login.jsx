@@ -35,7 +35,7 @@ function Login() {
 
 
     const passwordVisibility = () => {
-        if (password.current.type == "password")
+        if (password.current.type === "password")
             password.current.type = "text";
         else
             password.current.type = "password";

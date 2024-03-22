@@ -13,17 +13,20 @@
     width: 100%;
     
     @media only screen and (max-width:480px) {
-       
     }
 }
 
 .middle {
     display: table-cell;
     vertical-align: middle;
+    
+    @media only screen and (max-width:480px) {
+        width: 90%;
+    }
 
 }
 
-.updateForm {
+.updateFormDiv {
     height: 50%;
     margin-left: auto;
     margin-right: auto;
@@ -35,8 +38,8 @@
     border-radius: 10px;
     border: none;
     -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
-    box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
-    /* Whatever width you want */
+    box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);    
+    
     
     @media only screen and (max-width:480px) {
         width: 100%;
@@ -50,7 +53,7 @@
     margin-right: auto;
     
     @media only screen and (max-width:480px) {
-        width: 75%;
+        width: 90%;
     }
 }
 

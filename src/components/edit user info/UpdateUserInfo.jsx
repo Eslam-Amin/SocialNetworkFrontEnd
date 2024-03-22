@@ -21,6 +21,7 @@ function UpdateUserInfo() {
     const from = useRef()
     const relationship = useRef()
     const password = useRef()
+    const smallWindow = window.matchMedia("(max-width:480px)").matches;
 
 
     const goBack = () => {
@@ -38,10 +39,14 @@ function UpdateUserInfo() {
                 relationship: relationship.current.value !== "0" ? relationship.current.value : user.relationship,
                 password: password.current.value
             }
-            await axios.put(HOST + "/users/" + user._id, { ...updatedUserData, userId: user._id });
+            const res = await axios.put(HOST + "/users/" + user._id, { ...updatedUserData, userId: user._id });
+
             //dispatch("UPDATE_USER", res.data.updatedUser);
+            dispatch({ type: "UPDATE_USER", payload: res.data.updatedUser });
+            localStorage.setItem("user", JSON.stringify(res.data.updatedUser))
             enqueueSnackbar("user Data Is Updated Successfully", { variant: "success" })
-            navigate("/" + user?.username)
+            navigate("/" + user?.username);
+
         } catch (error) {
             console.log(error)
             enqueueSnackbar(error, { variant: "error" })
@@ -52,7 +57,7 @@ function UpdateUserInfo() {
             <Topbar />
             <div className="updateWrapper">
                 <div className="middle">
-                    <form className="updateForm">
+                    <form className="updateFormDiv" style={{ width: smallWindow && "90%" }}>
                         <input type="text" placeholder={user.city} className="registerInput" ref={city} />
 
                         <input type="text" placeholder={user.from} className="registerInput" ref={from} />
