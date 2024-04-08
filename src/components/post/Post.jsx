@@ -8,47 +8,46 @@ import { AuthContext } from './../../context/AuthContext';
 import PostLikes from "../post Likes/PostLikes";
 import PostEdit from "../post Edit/PostEdit";
 import { useSnackbar } from 'notistack';
+import DropdownMenu from "../DropdownMenu/DropdownMenu";
 
 
 
-
-function Post({ post, refreshFeed }) {
-    const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
-    const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
+const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
+const PF = "https://social-media-network.netlify.app/assets/";
+function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
-
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const [like, setLike] = useState(post.likes.length);
+    const [like, setLike] = useState(post.likes?.length);
     const { user: currentUser } = useContext(AuthContext);
     const [menuOpened, setMenuOpened] = useState(false);
     const [postLikesOpened, setPostLikesOpened] = useState(false);
     const [user, setUser] = useState({})
     const [postUsersLikes, setpostUsersLikes] = useState([]);
-    const [isLiked, setIsLiked] = useState(post.likes.includes(currentUser._id));
+
+    const [isLiked, setIsliked] = useState(post.likes?.includes(currentUser._id));
+
     const [editFlagClicked, setEditFlagClicked] = useState(false);
+
 
     let menuRef = useRef();
     let postLikesRef = useRef();
     let postEditRef = useRef();
-    /*
-        useEffect(() => {
-            setIsLiked(post.likes.includes(currentUser._id));
-            console.log(post.likes);
-        }, [currentUser._id, post.likes, like])
-        */
 
     const likeHandler = async () => {
         try {
             await axios.put(HOST + "/posts/" + post._id + "/like", { userId: currentUser._id })
-            setLike(isLiked ? like - 1 : like + 1);
-            setIsLiked(!isLiked);
+            setLike(like => isLiked ? like - 1 : like + 1);
+            setIsliked(isLiked => !isLiked);
         } catch (err) {
 
         }
     }
 
+    const cleanUpCloseFunction = (evtName) => {
+        document.removeEventListener("click", evtName);
+    }
     useEffect(() => {
         const fetchUser = async () => {
             const res = await axios.get(`${HOST}/users?userId=${post.userId}`)
@@ -63,11 +62,10 @@ function Post({ post, refreshFeed }) {
         const closeOutSide = (e) => {
             if (!menuRef.current?.contains(e.target))
                 setMenuOpened(false);
-
         };
         document.addEventListener("click", closeOutSide)
         return () => {
-            document.removeEventListener("click", closeOutSide);
+            cleanUpCloseFunction(closeOutSide)
         }
     })
 
@@ -76,22 +74,17 @@ function Post({ post, refreshFeed }) {
         const closeOutSide = (e) => {
             if (!postLikesRef.current?.contains(e.target))
                 setPostLikesOpened(false);
-
         };
         document.addEventListener("click", closeOutSide)
         return () => {
-            document.removeEventListener("click", closeOutSide);
+            cleanUpCloseFunction(closeOutSide)
         }
     })
-
 
     const handleMoreVert = (e) => {
         //e.preventDefault();
         setMenuOpened(!menuOpened);
-
     }
-
-
 
     const getPostLikes = async () => {
 
@@ -108,9 +101,9 @@ function Post({ post, refreshFeed }) {
     const handleDeletePost = async (e) => {
         if (post.userId === currentUser._id) {
             try {
-                await axios.delete(`${HOST}/posts/${post._id}`, { data: { userId: currentUser._id } });
+                deletePostAndUpdateFeed(post._id);
                 enqueueSnackbar("post Deleted Successfully! ", { variant: "success" })
-                refreshFeed();
+                await axios.delete(`${HOST}/posts/${post._id}`, { data: { userId: currentUser._id } });
             } catch (err) {
                 enqueueSnackbar(err.response.data, { variant: 'error' });
                 window.location.reload();
@@ -121,18 +114,14 @@ function Post({ post, refreshFeed }) {
         }
     }
 
-
-
     const cancelPostEdit = () => {
         setEditFlagClicked(false);
     }
-
 
     const handleEditPost = () => {
         if (post.userId === currentUser._id) {
             setEditFlagClicked(!editFlagClicked);
             setMenuOpened(false)
-
         }
         else {
             enqueueSnackbar("you can only edit your posts", { variant: 'error' });
@@ -145,9 +134,8 @@ function Post({ post, refreshFeed }) {
                 <div className="postTop">
                     <div className="postTopLeft">
                         <Link to={`/${user.username}`} className="linkClass">
-                            <img loading="lazy" src={user.profilePicture ? PF + "/" + user.profilePicture : PF + "/person/noProfile.png"} className="postProfileImg" alt="" />
+                            <img loading="lazy" src={user.profilePicture ? PF + user.profilePicture : `${PF}avatars/${user.gender}.png`} className="postProfileImg" alt="" />
                             <span className="postUsername">
-
                                 {user.name}
                                 {user.isAdmin &&
                                     <span title="Verified Badge">
@@ -164,23 +152,21 @@ function Post({ post, refreshFeed }) {
                         <MoreVert className="postMoreVert" onClick={handleMoreVert} />
                         {menuOpened &&
 
-                            /*<DropdownMenu post={post} />*/
-                            <div className="dropdownProfile">
-                                <ul className="moreList">
-                                    <li onClick={handleEditPost}>Edit</li>
-                                    <hr />
-                                    <li onClick={handleDeletePost}>Delete</li>
-
-                                </ul>
-
-                            </div>}
+                            <DropdownMenu post={post}
+                                onHandleDeletePost={handleDeletePost}
+                                onHandleEditPost={handleEditPost}
+                            />
+                        }
                     </div>
                 </div>
                 <div className="postCenter">
                     {
                         editFlagClicked &&
                         <span ref={postEditRef}>
-                            <PostEdit post={post} cancelPostEdit={cancelPostEdit} user={currentUser} refreshFeed={refreshFeed} />
+                            <PostEdit post={post}
+                                cancelPostEdit={cancelPostEdit}
+                                user={currentUser}
+                                editPostAndUpdateFeed={editPostAndUpdateFeed} />
                         </span>
 
                     }

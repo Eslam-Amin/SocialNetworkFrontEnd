@@ -39,6 +39,8 @@
 .shareInput {
     border: none;
     width: 80%;
+    unicode-bidi: plaintext;
+
 }
 
 .shareInput:focus {

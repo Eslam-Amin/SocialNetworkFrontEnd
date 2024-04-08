@@ -21,6 +21,7 @@ function Register() {
     const city = useRef();
     const from = useRef();
     const relationship = useRef();
+    const gender = useRef();
     const [isFetching, setIsfetching] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmationPasswordVisible, setconfirmationPasswordVisible] = useState(false);
@@ -48,6 +49,7 @@ function Register() {
                 username: getUsernameFromNameEntry(fname.current.value, lname.current.value),
                 email: email.current.value,
                 relationship: relationship.current.value,
+                gender: gender.current.value,
                 city: city.current.value,
                 from: from.current.value,
                 desc: desc.current.value,
@@ -71,13 +73,10 @@ function Register() {
 
     const handleEyeIcon = () => {
         setEyeVisible(true);
-
     }
 
-
-
     const passwordVisibility = () => {
-        if (password.current.type == "password") {
+        if (password.current.type === "password") {
             password.current.type = "text";
         }
         else {
@@ -87,7 +86,7 @@ function Register() {
         setPasswordVisible(!passwordVisible)
     }
     const passwordConfirmatonVisibility = () => {
-        if (confirmationPassword.current.type == "password")
+        if (confirmationPassword.current.type === "password")
             confirmationPassword.current.type = "text";
 
         else
@@ -148,6 +147,12 @@ function Register() {
                                 ref={from}
                                 className="registerInput" />
                         </div>
+                        <select name="gender" id="gender" ref={gender} required
+                            selected className="registerInput" placeholder="select your gender">
+                            <option value="0" disabled>-- Select your gender --</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
                         <select name="relationship" id="relationship" ref={relationship} required
                             selected className="registerInput" placeholder="select your relationship">
                             <option value="0" disabled>-- Select your Relationship --</option>
@@ -155,6 +160,7 @@ function Register() {
                             <option value="2">Single</option>
                             <option value="3">It's Complicated</option>
                         </select>
+
                         <div className="dividedDivs">
                             <span className="passwordField">
                                 <input

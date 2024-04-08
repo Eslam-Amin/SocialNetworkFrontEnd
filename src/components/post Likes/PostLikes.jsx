@@ -1,8 +1,9 @@
 import "./postLikes.css"
 import { Link } from "react-router-dom"
-function PostLikes({ postUsersLikes }) {
-    const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
 
+
+const PF = "https://social-media-network.netlify.app/assets/";
+function PostLikes({ postUsersLikes }) {
     return (
         <div className="likesContainer">
             <div className="postLikesTop">
@@ -13,10 +14,10 @@ function PostLikes({ postUsersLikes }) {
             {
                 postUsersLikes.map((user) => (
 
-                    <Link to={`/${user?.username}`} className="linkClass">
+                    <Link to={`/${user?.username}`} className="linkClass" key={user?._id}>
                         <ul key={user._id} className="likeListData">
                             <li>
-                                <img src={user.profilePicture ? PF + user.profilePicture : PF + "/person/noProfile.png"} className="userLikeImg" alt="" />
+                                <img src={user.profilePicture ? PF + user.profilePicture : `${PF}avatars/${user.gender}.png`} className="userLikeImg" alt="" />
                             </li>
                             <li className="userLikeName">{user.name}</li>
                         </ul>

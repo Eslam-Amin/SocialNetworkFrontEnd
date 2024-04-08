@@ -8,8 +8,6 @@ const fetchUser = async () => {
     }
 }
 
-
-
 const currentUser = await fetchUser();
 const INITIAL_STATE = {
     user: currentUser ? currentUser : null,

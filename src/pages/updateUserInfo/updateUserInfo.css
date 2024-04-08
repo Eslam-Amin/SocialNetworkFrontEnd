@@ -1,0 +1,82 @@
+* {
+    margin: 0;
+}
+
+
+
+.updateWrapper {
+    display: table;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    
+    @media only screen and (max-width:480px) {
+    }
+}
+
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+    
+    @media only screen and (max-width:480px) {
+        width: 90%;
+    }
+
+}
+
+.updateFormDiv {
+    height: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    border-radius: 10px;
+    border: none;
+    -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+    box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);    
+    
+    
+    @media only screen and (max-width:480px) {
+        width: 100%;
+    }
+}
+
+
+.registerInput {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    
+    @media only screen and (max-width:480px) {
+        width: 90%;
+    }
+}
+
+
+.loginBtn:focus {
+    outline: none;
+}
+
+.dividedDivs {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    @media only screen and (max-width:480px) {
+    width: 100%;  
+    flex-direction: row;
+        margin-top: 20px;
+    }
+}
+
+.btn {
+    margin-left: auto;
+    margin-right: auto;
+    
+    @media only screen and (max-width:480px) {
+    }
+}

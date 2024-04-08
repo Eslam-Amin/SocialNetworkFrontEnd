@@ -1,8 +1,8 @@
 import "./online.css"
 
 
+const PF = "https://social-media-network.netlify.app/assets/";
 function Online({ user }) {
-    const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
 
     return (
 

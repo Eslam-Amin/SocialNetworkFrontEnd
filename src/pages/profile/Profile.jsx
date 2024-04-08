@@ -19,7 +19,7 @@ import { AuthContext } from "../../context/AuthContext"
 
 
 function Profile() {
-    const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
+    const PF = "https://social-media-network.netlify.app/assets/";
     const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
     const { enqueueSnackbar } = useSnackbar();
 
@@ -34,7 +34,6 @@ function Profile() {
     useEffect(() => {
         const fetchUser = async () => {
             const res = await axios.get(`${HOST}/users?username=${username}`);
-
             setUser(res.data);
         };
         setOpenedDescEdit(false);
@@ -83,7 +82,7 @@ function Profile() {
                     <div className="profileRightTop">
                         <div className="profileCover">
                             <img src={user.coverPicture ? `${PF + user.coverPicture}` : PF + "cover/No_Cover.jpg"} alt="" className="profileCoverImg" loading="lazy" />
-                            <img src={user.profilePicture ? `${PF + user.profilePicture}` : PF + "person/noProfile.png"} alt="" className="profileUserImg" loading="lazy" />
+                            <img src={user.profilePicture ? `${PF + user.profilePicture}` : `${PF}avatars/${user.gender}.png`} alt="" className="profileUserImg" loading="lazy" />
                         </div>
 
                         <div className="profileInfo">
@@ -132,7 +131,6 @@ function Profile() {
                         <span className="links" onClick={() => handleOptionClick("personalInfo")}>Personal Information</span>
                     </div>
                     <div className="profileRightBottom">
-
 
                         {
 

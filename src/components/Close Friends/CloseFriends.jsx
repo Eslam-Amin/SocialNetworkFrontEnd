@@ -1,8 +1,8 @@
 import "./closeFriends.css"
 
 
+const PF = "https://social-media-network.netlify.app/assets/";
 function CloseFriends({ user }) {
-    const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
 
     return (
         <li className="sidebarFriend">

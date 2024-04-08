@@ -4,12 +4,16 @@ import { useSnackbar } from 'notistack';
 
 import { PermMedia, Label, Room, EmojiEmotions } from '@mui/icons-material';
 import { AuthContext } from "../../context/AuthContext";
-import axios from 'axios';
+import { useState } from "react";
 
-function Share({ refreshFeed }) {
-    const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
-    const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
+import axios from 'axios';
+import Loader from "../loader/Loader";
+
+const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
+const PF = "https://social-media-network.netlify.app/assets/";
+function Share({ refreshFeed, addPostAndUpdateFeed }) {
     const { enqueueSnackbar } = useSnackbar();
+    const [loading, setLoading] = useState(false);
 
     const { user } = useContext(AuthContext);
     const content = useRef();
@@ -18,16 +22,16 @@ function Share({ refreshFeed }) {
     const handleShare = async (e) => {
 
         e.preventDefault();
+        setLoading(true);
         if (content.current.value.trim().length !== 0) {
             const newPost = {
                 userId: user._id,
                 content: content.current.value.trim(),
             }
             try {
-                await axios.post(HOST + "/posts", newPost);
+                const newp = await axios.post(HOST + "/posts", newPost);
+                addPostAndUpdateFeed(newp.data);
                 content.current.value = "";
-                refreshFeed();
-
             } catch (err) {
 
             }
@@ -35,6 +39,7 @@ function Share({ refreshFeed }) {
         else {
             enqueueSnackbar("You can't share an empty post", { variant: "info" })
         }
+        setLoading(false);
     }
 
 
@@ -43,8 +48,13 @@ function Share({ refreshFeed }) {
         <div className="share">
             <div className="shareWrapper">
                 <div className="shareTop">
-                    <img src={user.profilePicture ? `${PF + user.profilePicture}` : `${PF}/person/noProfile.png`} alt="" className="shareProfileImg" />
-                    <textarea ref={content} type="text" className="shareInput" placeholder={`What's in Your Mind, ${user.name}?`} />
+                    <img src={user.profilePicture ? `${PF + user.profilePicture}` : `${PF}avatars/${user.gender}.png`} alt="" className="shareProfileImg" />
+                    {
+                        loading ?
+                            <Loader cName="sharePorfileImg" />
+                            :
+                            <textarea ref={content} type="text" className="shareInput" placeholder={`What's in Your Mind, ${user.name}?`} />
+                    }
                 </div>
                 <hr className="shareHr" />
                 <form className="shareBottom" onSubmit={handleShare}>

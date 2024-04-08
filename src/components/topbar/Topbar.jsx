@@ -6,10 +6,9 @@ import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import SearchResults from "../search/SearchResults";
 
+const PF = "https://social-media-network.netlify.app/assets/";
+const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
 function Topbar({ profile }) {
-    const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
-    //http://localhost:8000/api
-    const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
 
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
     const { user } = useContext(AuthContext);
@@ -49,7 +48,6 @@ function Topbar({ profile }) {
     })
     return (
         <div className="topbarContainer">
-
             {
                 smallWindow ? profile ?
                     <div className="topbarLeft">
@@ -61,9 +59,6 @@ function Topbar({ profile }) {
                     </div> :
                     ""
                     :
-
-
-
                     <div className="topbarLeft">
                         <Link to="/" style={{ textDecoration: "none" }}>
                             <span className="logo">
@@ -92,7 +87,6 @@ function Topbar({ profile }) {
 
             </div>
             <div className="topbarRight">
-
                 <div className="topbarIcons">
                     <div className="topbarIconItem">
                         <Notifications />
@@ -116,7 +110,7 @@ function Topbar({ profile }) {
 
                 </div>
                 <Link to={`/${user?.username}`}>
-                    < img loading="lazy" src={user.profilePicture ? `${PF + user.profilePicture}` : `${PF}/person/noProfile.png`} alt="" className="topbarImg" />
+                    < img loading="lazy" src={user.profilePicture ? `${PF + user.profilePicture}` : `${PF}avatars/${user.gender}.png`} alt="" className="topbarImg" />
                 </Link>
             </div>
 

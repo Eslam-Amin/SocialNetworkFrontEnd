@@ -1,7 +1,7 @@
 import "./advertisement.css"
 
+const PF = "https://social-media-network.netlify.app/assets/";
 function Advertisement() {
-    const PF = " https://funny-crepe-a4bd78.netlify.app/assets/";
 
     return (
         <div className="birthdayContainer">
