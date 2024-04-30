@@ -5,9 +5,11 @@ import { useContext, useEffect, useState } from "react";
 import axios from "../../axios.js";
 import { AuthContext } from "../../context/AuthContext";
 import Loader from "../loader/Loader";
+import PeopleToFollow from "../people you may follow/PeopleToFollow.jsx";
 
 
 function Feed({ username, name }) {
+
     const { user } = useContext(AuthContext);
     const [posts, setPosts] = useState([]);
     const [circleProgress, setCircleProgress] = useState(true);
@@ -44,9 +46,14 @@ function Feed({ username, name }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user._id, username])
 
+    const updatedFeed = async () => {
+        const api = "/posts/timeline/" + user._id;
+        const res = await axios.get(api, { headers });
+        setPosts(res.data.posts)
+    }
+
     const addPostAndUpdateFeed = (post) => {
         setPosts(posts => [...posts, post].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-
     }
 
     const deletePostAndUpdateFeed = (postId) => {
@@ -112,14 +119,14 @@ function Feed({ username, name }) {
                                         user.username === username ?
                                             <span className="noPostsSpan">you haven't share any Post</span>
                                             :
-                                            <span className="noPostsSpan">
+                                            <div className="peopleYouMayFollow">
                                                 {
                                                     name ?
                                                         name?.split(' ')[0] + " hasn't share any Post"
                                                         :
-                                                        "there are no posts to show"
+                                                        < PeopleToFollow onUpdateFeed={updatedFeed} />
                                                 }
-                                            </span>
+                                            </div>
 
                         }
                     </div>

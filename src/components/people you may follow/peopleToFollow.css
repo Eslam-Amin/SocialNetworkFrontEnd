@@ -1,0 +1,41 @@
+.peopleToFollowWrapper{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.peopleToFollowContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.peopleToFollow{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px;
+    width: 100%;
+}
+
+.peopleToFollowImage{
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.peopleToFollowWrapper h3{
+    text-align: center;
+}
+
+.peopleToFollowContainer .rightbarFollowBtn{
+   margin: 0;
+   height: fit-content;
+   margin-left: 30px;
+}

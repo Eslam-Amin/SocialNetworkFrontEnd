@@ -2,21 +2,32 @@ import { createContext, useReducer } from "react"
 import AuthReducer from "./AuthReducer";
 import axios from "../axios";
 
+
 const token = localStorage.getItem("token");
 let user = null;
+
 const getData = async () => {
 
     const headers = {
         'Authorization': `Bearer ${localStorage.getItem("token")}`,
         'Content-Type': 'application/json'
     };
-    if (token !== null) {
-        const currentUser = await axios.get(`/users/authenticate-user`, { headers })
+    try {
+        if (token !== null) {
+            const currentUser = await axios.get(`/users/authenticate-user`, { headers })
 
-        console.log(currentUser.data.user)
+            console.log(currentUser.data.user)
 
-        user = currentUser.data.user
-        return { user, token };
+            user = currentUser.data.user
+            return { user, token };
+        }
+        throw Error("You're Not Logged In");
+
+    }
+    catch (err) {
+        const pathName = window.location.pathname;
+        if (pathName !== "/login" && pathName !== "/register")
+            window.location.replace("/login");
     }
 }
 

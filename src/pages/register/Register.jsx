@@ -99,7 +99,6 @@ function Register() {
 
     const handleLoginClick = () => {
         navigate("/login");
-        console.log("CLicked")
     }
     return (
         <div className="register">

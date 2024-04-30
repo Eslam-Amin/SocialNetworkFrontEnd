@@ -1,14 +1,14 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useSnackbar } from 'notistack';
 
 import "./postEdit.css"
-import axios from "axios";
+import axios from "../../axios";
+import Loader from "../loader/Loader";
 
-import { HOST } from "../../global-links"
 function PostEdit({ post, cancelPostEdit, user, editPostAndUpdateFeed }) {
     const newContent = useRef();
     const { enqueueSnackbar } = useSnackbar();
-
+    const [loading, setLoading] = useState(false)
     const headers = {
         'Authorization': `Bearer ${localStorage.getItem("token")}`,
         'Content-Type': 'application/json'
@@ -21,7 +21,9 @@ function PostEdit({ post, cancelPostEdit, user, editPostAndUpdateFeed }) {
 
     const handleEditPost = async (e) => {
         e.preventDefault();
+        setLoading(true)
         if (newContent.current.value.trim().length !== 0) {
+
             try {
                 await axios.put("/posts/" + post._id, { userId: user._id, content: newContent.current.value.trim() }, { headers });
                 cancelPostEdit();
@@ -33,7 +35,7 @@ function PostEdit({ post, cancelPostEdit, user, editPostAndUpdateFeed }) {
         } else {
             enqueueSnackbar("You can't share an empty post", { variant: "info" })
         }
-
+        setLoading(false)
     }
     return (
 
@@ -42,8 +44,18 @@ function PostEdit({ post, cancelPostEdit, user, editPostAndUpdateFeed }) {
                 <textarea className="editInput" autoFocus
                     defaultValue={post.content} ref={newContent} />
                 <div className="editBottom">
-                    <button className="shareBtn postEditBtn" onClick={handleEditPost}>Save</button>
-                    <button className="cancelBtn postEditBtn" onClick={handleCancel}>Cancel</button>
+                    <button className="shareBtn postEditBtn" disabled={loading} onClick={handleEditPost}> {
+                        loading ?
+                            <Loader size="17px" />
+                            :
+                            "Save"
+                    }</button>
+                    <button className="cancelBtn postEditBtn" disabled={loading} onClick={handleCancel}> {
+                        loading ?
+                            <Loader size="17px" />
+                            :
+                            "Cancel"
+                    }</button>
                 </div>
             </form>
         </div>

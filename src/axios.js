@@ -1,25 +1,6 @@
 import axios from 'axios';
 import { HOST } from "./global-links"
 
-const getTokenFromLocalStorage = () => {
-    try {
-
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-        // Retrieve token from localStorage
-        return headers;
-    } catch (error) {
-        console.error('Error retrieving token from localStorage:', error);
-        return null;
-    }
-};
-
-// Usage:
-// const headers = getTokenFromLocalStorage();
-
 
 export default axios.create({
     baseURL: HOST,

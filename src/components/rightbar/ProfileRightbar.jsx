@@ -42,6 +42,7 @@ function ProfileRightbar({ user }) {
             }
         }
         getFriends();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?._id, currentUser?._id]);
 
 
@@ -50,12 +51,12 @@ function ProfileRightbar({ user }) {
             setIsLoading(true);
             let updatedUser = "";
             if (followed) {
-                updatedUser = await axios.put("/users/" + user._id + "/unfollow", { userId: currentUser._id });
+                updatedUser = await axios.put("/users/" + user._id + "/unfollow", { userId: currentUser._id }, { headers });
                 dispatch({ type: "UPDATE_USER", payload: updatedUser.data.updatedUser });
                 setFriends(friends => friends.filter(friend => friend._id !== currentUser._id));
             }
             else {
-                updatedUser = await axios.put(HOST + "/users/" + user._id + "/follow", { userId: currentUser._id });
+                updatedUser = await axios.put(HOST + "/users/" + user._id + "/follow", { userId: currentUser._id }, { headers });
                 dispatch({ type: "UPDATE_USER", payload: updatedUser.data.updatedUser });
                 setFriends(friends => [...friends, currentUser]);
             }

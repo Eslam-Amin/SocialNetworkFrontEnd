@@ -5,7 +5,6 @@ import Topbar from "../../components/topbar/Topbar";
 import "./updateUserInfo.css";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { HOST } from "../../global-links"
 import Loader from "../../components/loader/Loader";
 
 function UpdateUserInfo() {
