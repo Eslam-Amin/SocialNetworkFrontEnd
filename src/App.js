@@ -17,7 +17,7 @@ function App() {
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
         <Route path="/register" element={user ? <Navigate to="/" /> : <Register />} />
         <Route path="/:username" element={< Profile />} />
-        <Route path="/update_user_info/:username" element={< UpdateUserInfo />} />
+        <Route path="/update-user-info/:username" element={< UpdateUserInfo />} />
       </Routes>
     </Router>
   );

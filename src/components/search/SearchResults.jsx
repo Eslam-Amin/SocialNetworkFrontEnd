@@ -2,10 +2,7 @@
 import { Link } from "react-router-dom"
 import "./searchResults.css"
 
-
-
-
-const PF = "https://social-media-network.netlify.app/assets/";
+import { PF } from "../../global-links"
 function SearchResults({ searchResult, search }) {
     return (
 
@@ -17,7 +14,9 @@ function SearchResults({ searchResult, search }) {
                     <Link to={`/${user.username}`} className="linkClass " key={user._id}>
                         <ul className="searchItem">
                             <li>
-                                <img src={user.profilePicture ? PF + user.profilePicture : PF + `${PF}avatars/${user.gender}.png`} className="searchImg" alt="profile picture" />
+
+                                <img src={user.profilePicture ? PF + user.profilePicture : `${PF}avatars/${user.gender}.png`}
+                                    className="searchImg" alt="profile picture" />
                                 {user.name}
                             </li>
                         </ul>

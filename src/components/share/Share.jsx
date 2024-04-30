@@ -8,13 +8,15 @@ import { useState } from "react";
 
 import axios from 'axios';
 import Loader from "../loader/Loader";
+import { PF } from "../../global-links"
 
-const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
-const PF = "https://social-media-network.netlify.app/assets/";
 function Share({ refreshFeed, addPostAndUpdateFeed }) {
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false);
-
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        'Content-Type': 'application/json'
+    };
     const { user } = useContext(AuthContext);
     const content = useRef();
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
@@ -27,10 +29,13 @@ function Share({ refreshFeed, addPostAndUpdateFeed }) {
             const newPost = {
                 userId: user._id,
                 content: content.current.value.trim(),
+                createdAt: new Date().getTime(),
+                updatedAt: new Date().getTime()
             }
             try {
-                const newp = await axios.post(HOST + "/posts", newPost);
+                const newp = await axios.post("/posts", newPost, { headers });
                 addPostAndUpdateFeed(newp.data);
+                console.log(newp.data)
                 content.current.value = "";
             } catch (err) {
 

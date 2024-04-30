@@ -5,9 +5,8 @@ import { Link } from "react-router-dom"
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import SearchResults from "../search/SearchResults";
+import { HOST, PF } from "../../global-links"
 
-const PF = "https://social-media-network.netlify.app/assets/";
-const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
 function Topbar({ profile }) {
 
     const smallWindow = window.matchMedia("(max-width:480px)").matches;

@@ -108,8 +108,8 @@
     padding: 5px;
     text-align: start;
     unicode-bidi: plaintext;
-
-}
+    z-index: -1;
+}   
 
 .postImg {
     margin-top: 10px;
@@ -137,6 +137,15 @@
     cursor: pointer;
 }
 
+.loader {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    align-content: center;
+    width: 25px;
+    height: 20px;
+}
 
 .postReactCounter {
     font-size: 13px;
@@ -167,7 +176,6 @@ div .moreList {
 }
 
 .dropdownProfile {
-    z-index: 999;
     width: 100px;
     border-radius: 10px 0 10px 10px;
     background-color: white;

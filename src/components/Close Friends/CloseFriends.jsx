@@ -1,7 +1,7 @@
 import "./closeFriends.css"
 
 
-const PF = "https://social-media-network.netlify.app/assets/";
+import { PF } from "../../global-links"
 function CloseFriends({ user }) {
 
     return (

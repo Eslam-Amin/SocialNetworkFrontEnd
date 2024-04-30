@@ -18,7 +18,7 @@ function Login() {
 
     const [passwordVisible, setPasswordVisible] = useState(false);
     const password = useRef();
-    const { user, isFetching, error, dispatch } = useContext(AuthContext);
+    const { isFetching, error, dispatch } = useContext(AuthContext);
     const handleRegisterClick = (e) => {
         e.preventDefault();
         navigate("/register");

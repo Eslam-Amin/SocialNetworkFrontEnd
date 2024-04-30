@@ -1,7 +1,7 @@
 import "./online.css"
 
 
-const PF = "https://social-media-network.netlify.app/assets/";
+import { PF } from "../../global-links"
 function Online({ user }) {
 
     return (

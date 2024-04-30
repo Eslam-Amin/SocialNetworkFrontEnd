@@ -1,17 +1,21 @@
-import axios from "axios";
+import axios from "../../axios";
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import Topbar from "../../components/topbar/Topbar";
 import "./updateUserInfo.css";
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { HOST } from "../../global-links"
+import Loader from "../../components/loader/Loader";
 
 function UpdateUserInfo() {
-
-    const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        'Content-Type': 'application/json'
+    };
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
-
+    const [loading, setLoading] = useState(false)
     const { user, dispatch } = useContext(AuthContext);
 
     const city = useRef()
@@ -30,7 +34,7 @@ function UpdateUserInfo() {
     const saveData = async (e) => {
         e.preventDefault();
         try {
-
+            setLoading(true)
             const updatedUserData = {
                 city: city.current.value !== "" ? city.current.value : user.city,
                 from: from.current?.value !== "" ? from.current.value : user.from,
@@ -38,17 +42,19 @@ function UpdateUserInfo() {
                 gender: gender.current.value !== "0" ? gender.current.value : user.gender,
                 password: password.current.value
             }
-            const res = await axios.put(HOST + "/users/" + user._id, { ...updatedUserData, userId: user._id });
-
+            const res = await axios.put("/users/" + user._id, { ...updatedUserData, userId: user._id }, { headers });
+            // console.log(res.data)
             //dispatch("UPDATE_USER", res.data.updatedUser);
             dispatch({ type: "UPDATE_USER", payload: res.data.updatedUser });
-            localStorage.setItem("user", JSON.stringify(res.data.updatedUser))
+            // localStorage.setItem("user", JSON.stringify(res.data.updatedUser))
             enqueueSnackbar("user Data Is Updated Successfully", { variant: "success" })
-            navigate("/" + user?.username);
 
+            navigate("/" + user?.username);
+            setLoading(false)
         } catch (error) {
+            setLoading(false)
             console.log(error)
-            enqueueSnackbar(error, { variant: "error" })
+            enqueueSnackbar(error.response.data.message, { variant: "error" })
         }
     }
     return (
@@ -72,15 +78,32 @@ function UpdateUserInfo() {
                             className="registerInput" placeholder="select your relationship"
                             ref={relationship} >
                             <option value="0" selected disabled>-- Select your Relationship --</option>
-                            <option value="1">Engaged</option>
-                            <option value="2">Single</option>
-                            <option value="3">It's Complicated</option>
+                            <option value="single">Single</option>
+                            <option value="engaged">Engaged</option>
+                            <option value="married">Married</option>
+                            <option value="other">It's Complicated</option>
                         </select>
                         <input type="password" placeholder="password" className="registerInput" ref={password} />
 
                         <div className="dividedDivs">
-                            <button className="shareBtn btn" onClick={saveData}>Save</button>
-                            <button className="cancelBtn btn" onClick={goBack}>Cancel</button>
+
+
+                            <button className="shareBtn btn" disabled={loading} onClick={saveData}>
+                                {
+                                    loading ?
+                                        <Loader />
+                                        :
+                                        "Save"
+                                }
+                            </button>
+                            <button className="cancelBtn btn" disabled={loading} onClick={goBack}> {
+                                loading ?
+                                    <Loader />
+                                    :
+                                    "Cancel"
+                            }
+                            </button>
+
                         </div>
                     </form>
                 </div >

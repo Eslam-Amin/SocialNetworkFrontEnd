@@ -4,11 +4,15 @@ import { useSnackbar } from 'notistack';
 import "./postEdit.css"
 import axios from "axios";
 
-const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
+import { HOST } from "../../global-links"
 function PostEdit({ post, cancelPostEdit, user, editPostAndUpdateFeed }) {
     const newContent = useRef();
     const { enqueueSnackbar } = useSnackbar();
 
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        'Content-Type': 'application/json'
+    };
     const handleCancel = (e) => {
         e.preventDefault();
         cancelPostEdit();
@@ -19,7 +23,7 @@ function PostEdit({ post, cancelPostEdit, user, editPostAndUpdateFeed }) {
         e.preventDefault();
         if (newContent.current.value.trim().length !== 0) {
             try {
-                await axios.put(HOST + "/posts/" + post._id, { userId: user._id, content: newContent.current.value.trim() });
+                await axios.put("/posts/" + post._id, { userId: user._id, content: newContent.current.value.trim() }, { headers });
                 cancelPostEdit();
                 enqueueSnackbar("post Edited Successfully! ", { variant: "success" })
                 editPostAndUpdateFeed(post, newContent.current.value.trim())
@@ -33,12 +37,13 @@ function PostEdit({ post, cancelPostEdit, user, editPostAndUpdateFeed }) {
     }
     return (
 
-        <div className="postEditWrapper">
+        <div className="postEditWrapper" >
             <form className="editWrapper">
-                <textarea className="editInput" autoFocus defaultValue={post.content} ref={newContent} />
+                <textarea className="editInput" autoFocus
+                    defaultValue={post.content} ref={newContent} />
                 <div className="editBottom">
-                    <button className="shareBtn btn" onClick={handleEditPost}>Save</button>
-                    <button className="cancelBtn btn" onClick={handleCancel}>Cancel</button>
+                    <button className="shareBtn postEditBtn" onClick={handleEditPost}>Save</button>
+                    <button className="cancelBtn postEditBtn" onClick={handleCancel}>Cancel</button>
                 </div>
             </form>
         </div>

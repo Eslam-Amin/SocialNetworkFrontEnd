@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from "@material-ui/core";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { HOST } from "../../global-links"
 
 function Register() {
-    const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -31,8 +31,8 @@ function Register() {
     const navigate = useNavigate();
 
     const getUsernameFromNameEntry = (fname, lname) => {
-        const username = fname.charAt(0).toUpperCase() + fname.slice(1).trim()
-            + lname.charAt(0).toUpperCase() + lname.slice(1).trim();
+        const username = fname.charAt(0).toUpperCase() + fname.slice(1).trim().toLowerCase()
+            + lname.charAt(0).toUpperCase() + lname.slice(1).trim().toLowerCase();
         console.log(username);
         return username;
     }
@@ -75,7 +75,7 @@ function Register() {
         setEyeVisible(true);
     }
 
-    const passwordVisibility = () => {
+    const changePasswordVisibility = () => {
         if (password.current.type === "password") {
             password.current.type = "text";
         }
@@ -83,7 +83,7 @@ function Register() {
             password.current.type = "password";
         }
 
-        setPasswordVisible(!passwordVisible)
+        setPasswordVisible(passwordVisibility => !passwordVisibility)
     }
     const passwordConfirmatonVisibility = () => {
         if (confirmationPassword.current.type === "password")
@@ -153,12 +153,14 @@ function Register() {
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                         </select>
-                        <select name="relationship" id="relationship" ref={relationship} required
-                            selected className="registerInput" placeholder="select your relationship">
+                        <select
+                            name="relationship" id="relationship" ref={relationship} required
+                            defaultValue="-- Select your Relationship --" className="registerInput" placeholder="select your relationship">
                             <option value="0" disabled>-- Select your Relationship --</option>
-                            <option value="1">Engaged</option>
-                            <option value="2">Single</option>
-                            <option value="3">It's Complicated</option>
+                            <option value="single">Single</option>
+                            <option value="engaged">Engaged</option>
+                            <option value="married">Married</option>
+                            <option value="other">It's Complicated</option>
                         </select>
 
                         <div className="dividedDivs">
@@ -173,11 +175,11 @@ function Register() {
                                     onFocus={handleEyeIcon}
                                 />
                                 {
-                                    eyeVisible ?
+                                    eyeVisible &&
                                         passwordVisible ?
-                                            <VisibilityOffIcon className="visibleIcon" onClick={passwordVisibility} />
-                                            :
-                                            <VisibilityIcon className="visibleIcon" onClick={passwordVisibility} /> : ""
+                                        <VisibilityOffIcon className="visibleIcon" onClick={changePasswordVisibility} />
+                                        :
+                                        <VisibilityIcon className="visibleIcon" onClick={changePasswordVisibility} />
                                 }
                             </span>
                             <span className="passwordField" >

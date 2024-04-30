@@ -3,7 +3,7 @@ import Advertisement from '../advertisement/Advertisement';
 import { Users } from './../../dummyData';
 import Online from "../Online/Online"
 
-const PF = "https://social-media-network.netlify.app/assets/";
+import { PF } from "../../global-links"
 function HomeRightbar() {
     return (
         <div className="rightBar">

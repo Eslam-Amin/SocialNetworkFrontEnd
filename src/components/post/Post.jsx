@@ -1,7 +1,7 @@
 import "./post.css"
 import { MoreVert, Star } from '@mui/icons-material';
 import { useState, useEffect, useContext, useRef } from "react";
-import axios from "axios";
+import axios from "../../axios.js";
 import { format } from "timeago.js"
 import { Link } from "react-router-dom";
 import { AuthContext } from './../../context/AuthContext';
@@ -9,11 +9,11 @@ import PostLikes from "../post Likes/PostLikes";
 import PostEdit from "../post Edit/PostEdit";
 import { useSnackbar } from 'notistack';
 import DropdownMenu from "../DropdownMenu/DropdownMenu";
+import Loader from "../loader/Loader";
+
+import { HOST, PF } from "../../global-links"
 
 
-
-const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
-const PF = "https://social-media-network.netlify.app/assets/";
 function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
 
@@ -28,18 +28,25 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
 
     const [isLiked, setIsliked] = useState(post.likes?.includes(currentUser._id));
 
+    const [likesLoader, setLikesLoader] = useState(false);
     const [editFlagClicked, setEditFlagClicked] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        'Content-Type': 'application/json'
+    };
     let menuRef = useRef();
     let postLikesRef = useRef();
     let postEditRef = useRef();
 
     const likeHandler = async () => {
         try {
-            await axios.put(HOST + "/posts/" + post._id + "/like", { userId: currentUser._id })
+            setIsLoading(true);
+            await axios.put(HOST + "/posts/" + post._id + "/react", { userId: currentUser._id }, { headers })
             setLike(like => isLiked ? like - 1 : like + 1);
             setIsliked(isLiked => !isLiked);
+            setIsLoading(false);
         } catch (err) {
 
         }
@@ -48,65 +55,35 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
     const cleanUpCloseFunction = (evtName) => {
         document.removeEventListener("click", evtName);
     }
-    useEffect(() => {
-        const fetchUser = async () => {
-            const res = await axios.get(`${HOST}/users?userId=${post.userId}`)
-            setUser(res.data);
-        };
-        fetchUser();
-    }, [post.userId])
 
-
-
-    useEffect(() => {
-        const closeOutSide = (e) => {
-            if (!menuRef.current?.contains(e.target))
-                setMenuOpened(false);
-        };
-        document.addEventListener("click", closeOutSide)
-        return () => {
-            cleanUpCloseFunction(closeOutSide)
-        }
-    })
-
-
-    useEffect(() => {
-        const closeOutSide = (e) => {
-            if (!postLikesRef.current?.contains(e.target))
-                setPostLikesOpened(false);
-        };
-        document.addEventListener("click", closeOutSide)
-        return () => {
-            cleanUpCloseFunction(closeOutSide)
-        }
-    })
-
-    const handleMoreVert = (e) => {
-        //e.preventDefault();
+    const handleMoreVert = () => {
         setMenuOpened(!menuOpened);
     }
 
     const getPostLikes = async () => {
-
         try {
-            const postLikes = (await axios.get(HOST + "/posts/postLikes/" + post._id));
-            setpostUsersLikes(postLikes.data)
+            setEditFlagClicked(false)
+            setLikesLoader(true);
+            const postLikes = (await axios.get("/posts/post-likes/" + post._id));
+            setpostUsersLikes(postLikes.data.users)
             setPostLikesOpened(true);
         }
         catch (err) {
             console.log(err)
         }
+        finally {
+            setLikesLoader(false)
+        }
     };
 
-    const handleDeletePost = async (e) => {
+    const handleDeletePost = async () => {
         if (post.userId === currentUser._id) {
             try {
                 deletePostAndUpdateFeed(post._id);
+                await axios.delete(`/posts/${post._id} `, { data: { userId: currentUser._id }, headers });
                 enqueueSnackbar("post Deleted Successfully! ", { variant: "success" })
-                await axios.delete(`${HOST}/posts/${post._id}`, { data: { userId: currentUser._id } });
             } catch (err) {
                 enqueueSnackbar(err.response.data, { variant: 'error' });
-                window.location.reload();
             }
         }
         else {
@@ -120,7 +97,7 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
 
     const handleEditPost = () => {
         if (post.userId === currentUser._id) {
-            setEditFlagClicked(!editFlagClicked);
+            setEditFlagClicked(true);
             setMenuOpened(false)
         }
         else {
@@ -128,8 +105,60 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
         }
     }
 
+
+    useEffect(() => {
+        const controller = new AbortController();
+
+        const fetchUserOfEachPost = async () => {
+            if (post.userId === currentUser._id)
+                setUser(currentUser)
+            const res = await axios.get(`/users?userId=${post.userId}`,
+                { signal: controller.signal, headers })
+            setUser(res.data.user);
+        };
+        fetchUserOfEachPost();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [post.userId])
+
+
+
+    useEffect(() => {
+        const closeOutSide = (e) => {
+            if (!postLikesRef.current?.contains(e.target))
+                setPostLikesOpened(false);
+        };
+        document.addEventListener("click", closeOutSide)
+        return () => {
+            cleanUpCloseFunction(closeOutSide)
+        }
+    })
+
+    // useEffect(() => {
+    //     const closeOutSide = (e) => {
+    //         if (!postEditRef.current?.contains(e.target) && e.target !== "edit")
+    //             setEditFlagClicked(false);
+
+    //     }
+    //     document.addEventListener("click", closeOutSide);
+    //     return () => {
+    //         cleanUpCloseFunction(closeOutSide)
+    //     }
+    // })
+
+    useEffect(() => {
+        const closeOutSide = (e) => {
+            if (!menuRef.current?.contains(e.target))
+                setMenuOpened(false);
+        };
+        document.addEventListener("click", closeOutSide)
+        return () => {
+            cleanUpCloseFunction(closeOutSide)
+        }
+    })
+
     return (
-        <div className="post">
+        <div className="post" >
             <div className="postWrapper">
                 <div className="postTop">
                     <div className="postTopLeft">
@@ -151,48 +180,59 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
                     <div className="postTopRight" ref={menuRef}>
                         <MoreVert className="postMoreVert" onClick={handleMoreVert} />
                         {menuOpened &&
-
-                            <DropdownMenu post={post}
+                            <DropdownMenu
+                                sameUser={currentUser._id === post.userId}
+                                post={post}
                                 onHandleDeletePost={handleDeletePost}
                                 onHandleEditPost={handleEditPost}
                             />
+
                         }
                     </div>
                 </div>
+
+                {
+                    editFlagClicked &&
+                    <div ref={postEditRef}>
+                        <PostEdit
+                            post={post}
+                            cancelPostEdit={cancelPostEdit}
+                            user={currentUser}
+                            editPostAndUpdateFeed={editPostAndUpdateFeed} />
+                    </div>
+                }
+
+
+                {
+                    postLikesOpened &&
+                    <div ref={postLikesRef}>
+                        <PostLikes postUsersLikes={postUsersLikes} />
+                    </div>
+                }
+
                 <div className="postCenter">
-                    {
-                        editFlagClicked &&
-                        <span ref={postEditRef}>
-                            <PostEdit post={post}
-                                cancelPostEdit={cancelPostEdit}
-                                user={currentUser}
-                                editPostAndUpdateFeed={editPostAndUpdateFeed} />
-                        </span>
-
-                    }
-
                     <span className="postText">{post?.content} </span>
                     {post.img ?
                         <img className="postImg" src={PF + post?.img} alt="" /> : ""
                     }
 
-                    {
-                        postLikesOpened &&
-                        <div ref={postLikesRef}>
-                            <PostLikes postUsersLikes={postUsersLikes} />
-                        </div>
-                    }
                 </div>
                 <div className="postBottom">
                     <div className="postBottomLeft">
                         {
-                            isLiked ?
-                                <img className="reactIcon" src={`${PF}liked.png`} alt="" onClick={likeHandler} />
-                                :
-                                <img className="reactIcon" src={`${PF}like.png`} alt="" onClick={likeHandler} />
+                            isLoading ?
+                                <Loader cName="loader" size="16px" /> :
+                                isLiked ?
+                                    <img className="reactIcon" src={`${PF}liked.png`} alt="" onClick={likeHandler} />
+                                    :
+                                    <img className="reactIcon" src={`${PF}like.png`} alt="" onClick={likeHandler} />
                         }
-                        {/*<img className="reactIcon" src={`${PF}heart.png`} alt="" onClick={likeHandler} />*/}
-                        <span className="postReactCounter" onClick={getPostLikes}>{like} People Like it</span>
+                        {/*<img className="reactIcon" src={`${ PF } heart.png`} alt="" onClick={likeHandler} />*/}
+                        {
+                            likesLoader ?
+                                <Loader cName="loader" size="16px" /> :
+                                <span className="postReactCounter" onClick={getPostLikes}>{like} People Like it</span>
+                        }
 
                     </div>
                     <div className="postBottomRight">

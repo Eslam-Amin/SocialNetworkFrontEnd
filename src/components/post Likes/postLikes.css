@@ -1,23 +1,23 @@
-.likesContainer{
+.likesWrapper{
     display: flex;
     flex-direction: column;
-
-width: 50%;
+    width: 25%;
     border-radius:10px 10px 10px 10px;
     background-color: white;
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 200px;
+    height: 250px;
     -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
     box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
     max-height: 300px;
-    overflow-y: scroll;
     overflow-x: hidden;
-
+    z-index: 99;
     @media only screen and (max-width:480px) {
         width: 80%;
+        height: 500px;
+
     }
 }
 
@@ -27,6 +27,11 @@ width: 50%;
     justify-content: space-between;
 }
 
+.likesContainer{
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+}
 .numberOfLikes{
     font-size: 20px;
     color:#1877f2;

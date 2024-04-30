@@ -1,0 +1,23 @@
+.classWrapper{
+    display: flex;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    align-content: center;
+ 
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 90vh;
+    width: 100vw 
+}
+
+p{
+    font-size: large;
+    font-weight: bold;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    align-content: center;
+     margin-top: auto;
+    margin-bottom: auto;
+}

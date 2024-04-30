@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../axios.js";
 import { useState, useEffect, useContext } from 'react';
 import { Link } from "react-router-dom";
 import { AuthContext } from './../../context/AuthContext';
@@ -8,13 +8,14 @@ import { useSnackbar } from 'notistack';
 import "./rightbar.css"
 import Loader from "../loader/Loader";
 
-
-
-const HOST = "https://socialmediabackend-7o1t.onrender.com/api";
-const PF = "https://social-media-network.netlify.app/assets/";
-
+import { HOST, PF } from "../../global-links"
 
 function ProfileRightbar({ user }) {
+
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        'Content-Type': 'application/json'
+    };
     const [friends, setFriends] = useState([]);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -22,21 +23,26 @@ function ProfileRightbar({ user }) {
     const navigate = useNavigate();
     const [followed, setFollowed] = useState(currentUser.followings?.includes(user?._id));
     const [isLoading, setIsLoading] = useState(false);
-
+    const [friendsLoadingProgress, setFriendsLoadingProgress] = useState(false)
     useEffect(() => {
         const getFriends = async () => {
             try {
-                const res = await axios.get(HOST + "/users/friends/" + user?._id);
-                setFriends(res.data);
-                let flag = res.data.filter((friend) =>
-                    friend._id === currentUser._id)
-                flag.length === 0 ? setFollowed(false) : setFollowed(true)
+                if (user?._id) {
+                    setFriendsLoadingProgress(true)
+                    const res = await axios.get("/users/friends/" + user?._id, { headers });
+                    setFriends(res.data.friendsList);
+                    let flag = res.data.friendsList.filter((friend) =>
+                        friend._id === currentUser._id)
+                    flag.length === 0 ? setFollowed(false) : setFollowed(true)
+                    setFriendsLoadingProgress(false)
+                }
             } catch (err) {
+                setFriendsLoadingProgress(false)
                 console.log(err)
             }
         }
         getFriends();
-    }, [currentUser._id, user?._id]);
+    }, [user?._id, currentUser?._id]);
 
 
     const handleFollowClick = async () => {
@@ -44,7 +50,7 @@ function ProfileRightbar({ user }) {
             setIsLoading(true);
             let updatedUser = "";
             if (followed) {
-                updatedUser = await axios.put(HOST + "/users/" + user._id + "/unfollow", { userId: currentUser._id });
+                updatedUser = await axios.put("/users/" + user._id + "/unfollow", { userId: currentUser._id });
                 dispatch({ type: "UPDATE_USER", payload: updatedUser.data.updatedUser });
                 setFriends(friends => friends.filter(friend => friend._id !== currentUser._id));
             }
@@ -63,12 +69,12 @@ function ProfileRightbar({ user }) {
 
     const handleLogOutClick = (e) => {
         localStorage.clear();
-        navigate("/")
+        navigate("/login")
         window.location.reload();
     }
 
     const gotoUpdate = () => {
-        navigate("/update_user_info/" + currentUser.username)
+        navigate("/update-user-info/" + currentUser.username)
     }
 
     return (
@@ -113,7 +119,7 @@ function ProfileRightbar({ user }) {
                     </div>
                     <div className="rightbarInfoItem">
                         <span className="rightbarInfoKey">Relationship:</span>
-                        <span className="rightbarInfoValue">{user.relationship === 2 ? "Single" : user.relationship === 1 ? "Engaged" : "It's Complicated"}</span>
+                        <span className="rightbarInfoValue">{user.relationship === "other" ? "it's complicated" : user.relationship}</span>
                     </div>
                 </div>
                 <h4 className="rightbarTitle">User Friends</h4>
@@ -121,15 +127,20 @@ function ProfileRightbar({ user }) {
                 <div className="rightbarFollowings">
 
                     {
-                        friends.map((friend) => (
-                            <Link to={"/" + friend.username} key={friend._id} style={{ textDecoration: "none", color: "black" }}>
+                        friendsLoadingProgress ?
+                            <Loader />
+                            :
+                            friends.map((friend) => (
+                                <Link to={"/" + friend.username}
+                                    key={friend._id}
+                                    style={{ textDecoration: "none", color: "black" }}>
 
-                                <div className="rightbarFollowing" >
-                                    <img loading="lazy" src={friend.profilePicture ? `${PF + friend.profilePicture}` : `${PF}avatars/${friend.gender}.png`} alt="" className="rightbarFollowingImg" />
-                                    <span className="rightbarFollowingName">{friend.name}</span>
-                                </div>
-                            </Link>
-                        ))
+                                    <div className="rightbarFollowing" >
+                                        <img loading="lazy" src={friend.profilePicture ? `${PF + friend.profilePicture}` : `${PF}avatars/${friend.gender}.png`} alt="" className="rightbarFollowingImg" />
+                                        <span className="rightbarFollowingName">{friend.name}</span>
+                                    </div>
+                                </Link>
+                            ))
                     }
 
 

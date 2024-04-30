@@ -1,6 +1,6 @@
 import "./advertisement.css"
 
-const PF = "https://social-media-network.netlify.app/assets/";
+import { PF } from "../../global-links"
 function Advertisement() {
 
     return (
