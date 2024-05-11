@@ -7,7 +7,7 @@
     align-items: center;
     
 @media only screen and (max-width:480px) {
-    height: 130vh;
+    height: fit-content;
 }
 }
 
@@ -84,7 +84,8 @@
 }
 
 
-.dividedDivs{
+.dividedDivs-register
+{
     display: flex;
     width: 100%;
     flex-direction: row;

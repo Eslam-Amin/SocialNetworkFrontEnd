@@ -1,8 +1,8 @@
+import "./updateUserInfo.css";
 import axios from "../../axios";
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import Topbar from "../../components/topbar/Topbar";
-import "./updateUserInfo.css";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import Loader from "../../components/loader/Loader";
@@ -62,19 +62,19 @@ function UpdateUserInfo() {
             <div className="updateWrapper">
                 <div className="middle">
                     <form className="updateFormDiv" style={{ width: smallWindow && "90%" }}>
-                        <input type="text" placeholder={user.city} className="registerInput" ref={city} />
+                        <input type="text" placeholder={user.city} className="updateUserInput" ref={city} />
 
-                        <input type="text" placeholder={user.from} className="registerInput" ref={from} />
+                        <input type="text" placeholder={user.from} className="updateUserInput" ref={from} />
 
                         <select name="gender" id="gender"
-                            className="registerInput" placeholder="select your Gender"
+                            className="updateUserInput" placeholder="select your Gender"
                             ref={gender} >
                             <option value="0" selected disabled>-- Select your gender --</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                         </select>
                         <select name="relationship" id="relationship"
-                            className="registerInput" placeholder="select your relationship"
+                            className="updateUserInput" placeholder="select your relationship"
                             ref={relationship} >
                             <option value="0" selected disabled>-- Select your Relationship --</option>
                             <option value="single">Single</option>
@@ -82,7 +82,7 @@ function UpdateUserInfo() {
                             <option value="married">Married</option>
                             <option value="other">It's Complicated</option>
                         </select>
-                        <input type="password" placeholder="password" className="registerInput" ref={password} />
+                        <input type="password" placeholder="password" className="updateUserInput" ref={password} />
 
                         <div className="dividedDivs">
 

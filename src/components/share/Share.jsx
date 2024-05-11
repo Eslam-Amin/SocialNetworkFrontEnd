@@ -6,7 +6,7 @@ import { PermMedia, Label, Room, EmojiEmotions } from '@mui/icons-material';
 import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
 
-import axios from 'axios';
+import axios from '../../axios';
 import Loader from "../loader/Loader";
 import { PF } from "../../global-links"
 
@@ -35,7 +35,6 @@ function Share({ refreshFeed, addPostAndUpdateFeed }) {
             try {
                 const newp = await axios.post("/posts", newPost, { headers });
                 addPostAndUpdateFeed(newp.data);
-                console.log(newp.data)
                 content.current.value = "";
             } catch (err) {
 

@@ -44,6 +44,9 @@ function Register() {
             confirmationPassword.current.setCustomValidity("Passwords Don't Match!!");
             setIsfetching(false);
         } else {
+            if (gender.current.value === 0 || relationship.current.value === 0)
+                enqueueSnackbar("Something Wrong With the form", { variant: 'error' });
+
             const user = {
                 name: uname,
                 username: getUsernameFromNameEntry(fname.current.value, lname.current.value),
@@ -112,7 +115,7 @@ function Register() {
                 <div className="registerRight">
 
                     <form autoComplete="off" className="registerBox" onSubmit={handleRegisterClick}>
-                        <div className="dividedDivs">
+                        <div className="dividedDivs-register">
                             <input autoComplete="off"
                                 type="text"
                                 placeholder="First Name"
@@ -132,7 +135,7 @@ function Register() {
                             required
                             ref={email}
                             className="registerInput" />
-                        <div className="dividedDivs">
+                        <div className="dividedDivs-register">
                             <input
                                 type="text"
                                 placeholder="City"
@@ -147,22 +150,22 @@ function Register() {
                                 className="registerInput" />
                         </div>
                         <select name="gender" id="gender" ref={gender} required
-                            selected className="registerInput" placeholder="select your gender">
-                            <option value="0" disabled>-- Select your gender --</option>
+                            className="registerInput" placeholder="select your gender">
+                            <option selected disabled value="0">-- Select your gender --</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                         </select>
                         <select
                             name="relationship" id="relationship" ref={relationship} required
-                            defaultValue="-- Select your Relationship --" className="registerInput" placeholder="select your relationship">
-                            <option value="0" disabled>-- Select your Relationship --</option>
+                            className="registerInput" placeholder="select your relationship">
+                            <option selected disabled value="0">-- Select your Relationship --</option>
                             <option value="single">Single</option>
                             <option value="engaged">Engaged</option>
                             <option value="married">Married</option>
                             <option value="other">It's Complicated</option>
                         </select>
 
-                        <div className="dividedDivs">
+                        <div className="dividedDivs-register">
                             <span className="passwordField">
                                 <input
                                     type="password"

@@ -1,34 +1,16 @@
-import axios from "axios"
-import { useState, useContext } from 'react';
-
-import { AuthContext } from './../../context/AuthContext';
-
+import { useState } from 'react';
 
 import { Link } from "react-router-dom";
 import { PF } from "../../global-links"
 import Loader from "../loader/Loader";
 
-function FollowingIndvidiual({ user, onUpdateFeed, headers }) {
-    const [loading, setLoading] = useState(false)
-    const { user: currentUser, dispatch } = useContext(AuthContext);
+function FollowingIndvidual({ user, onFollowUser, loading }) {
 
-    const followUser = async (user) => {
-        try {
-
-            setLoading(true)
-            const res = await axios.put(`http://localhost:3000/api/v2/users/${user._id}/follow`, { userId: currentUser._id }, { headers })
-            dispatch({ type: "UPDATE_USER", payload: res.data.updatedUser });
-
-            onUpdateFeed();
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
 
     return (
         <div className="peopleToFollowContainer" key={user._id}>
             <Link to={"/" + user.username}
+                key={user._id}
                 style={{ textDecoration: "none", color: "black" }}>
 
                 <div className="peopleToFollow" >
@@ -39,15 +21,15 @@ function FollowingIndvidiual({ user, onUpdateFeed, headers }) {
                 </div>
             </Link>
             <button className="rightbarFollowBtn"
-                onClick={() => followUser(user)}
+                onClick={() => onFollowUser(user)}
                 key={user._id}
-                disabled={loading}
             >
                 {
                     loading ?
                         <Loader size="17px" />
                         :
                         "Follow"
+
                 }
 
             </button>
@@ -55,4 +37,4 @@ function FollowingIndvidiual({ user, onUpdateFeed, headers }) {
     )
 }
 
-export default FollowingIndvidiual
+export default FollowingIndvidual

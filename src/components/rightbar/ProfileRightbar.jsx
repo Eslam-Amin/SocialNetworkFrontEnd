@@ -60,7 +60,6 @@ function ProfileRightbar({ user }) {
                 dispatch({ type: "UPDATE_USER", payload: updatedUser.data.updatedUser });
                 setFriends(friends => [...friends, currentUser]);
             }
-            localStorage.setItem("user", JSON.stringify(updatedUser.data.updatedUser));
             setFollowed(followed => !followed);
             setIsLoading(false);
         } catch (err) {
@@ -70,6 +69,7 @@ function ProfileRightbar({ user }) {
 
     const handleLogOutClick = (e) => {
         localStorage.clear();
+        sessionStorage.clear();
         navigate("/login")
         window.location.reload();
     }
@@ -123,7 +123,7 @@ function ProfileRightbar({ user }) {
                         <span className="rightbarInfoValue">{user.relationship === "other" ? "it's complicated" : user.relationship}</span>
                     </div>
                 </div>
-                <h4 className="rightbarTitle">User Friends</h4>
+                <h4 className="rightbarTitle">User Followers</h4>
 
                 <div className="rightbarFollowings">
 
@@ -131,17 +131,27 @@ function ProfileRightbar({ user }) {
                         friendsLoadingProgress ?
                             <Loader />
                             :
-                            friends.map((friend) => (
-                                <Link to={"/" + friend.username}
-                                    key={friend._id}
-                                    style={{ textDecoration: "none", color: "black" }}>
+                            friends.length === 0 ?
+                                <span className="moreFeedBtn rightbarInfoValue">
+                                    {
+                                        user?._id === currentUser._id ?
+                                            "you have no follower"
+                                            :
+                                            `${user.name.split(" ")[0]} has no follower`
+                                    }
+                                </span>
+                                :
+                                friends.map((friend) => (
+                                    <Link to={"/" + friend.username}
+                                        key={friend._id}
+                                        style={{ textDecoration: "none", color: "black" }}>
 
-                                    <div className="rightbarFollowing" >
-                                        <img loading="lazy" src={friend.profilePicture ? `${PF + friend.profilePicture}` : `${PF}avatars/${friend.gender}.png`} alt="" className="rightbarFollowingImg" />
-                                        <span className="rightbarFollowingName">{friend.name}</span>
-                                    </div>
-                                </Link>
-                            ))
+                                        <div className="rightbarFollowing" >
+                                            <img loading="lazy" src={friend.profilePicture ? `${PF + friend.profilePicture}` : `${PF}avatars/${friend.gender}.png`} alt="" className="rightbarFollowingImg" />
+                                            <span className="rightbarFollowingName">{friend.name}</span>
+                                        </div>
+                                    </Link>
+                                ))
                     }
 
 

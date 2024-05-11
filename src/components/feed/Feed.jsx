@@ -10,18 +10,14 @@ import PeopleToFollow from "../people you may follow/PeopleToFollow.jsx";
 
 function Feed({ username, name }) {
 
+
+
     const { user } = useContext(AuthContext);
     const [posts, setPosts] = useState([]);
     const [circleProgress, setCircleProgress] = useState(true);
     const [page, setPage] = useState(2)
     const [contentOver, setContentOver] = useState(false);
     const [moreProgressLoader, setMoreProgressLoader] = useState(false);
-
-    const headers = {
-        'Authorization': `Bearer ${localStorage.getItem("token")}`,
-        'Content-Type': 'application/json'
-    };
-
 
     useEffect(() => {
         const controller = new AbortController();
@@ -30,7 +26,7 @@ function Feed({ username, name }) {
                 setCircleProgress(true);
 
                 const api = username ? "/posts/profile/" + username : "/posts/timeline/" + user._id
-                const res = await axios.get(api, { signal: controller.signal, headers });
+                const res = await axios.get(api, { signal: controller.signal });
                 if (res.data.status === "success")
                     setPosts(res.data.posts);
 
@@ -48,11 +44,11 @@ function Feed({ username, name }) {
 
     const updatedFeed = async () => {
         const api = "/posts/timeline/" + user._id;
-        const res = await axios.get(api, { headers });
+        const res = await axios.get(api);
         setPosts(res.data.posts)
     }
 
-    const addPostAndUpdateFeed = (post) => {
+    const addPostAndUpdateFeed = ({ post }) => {
         setPosts(posts => [...posts, post].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
     }
 
@@ -70,7 +66,7 @@ function Feed({ username, name }) {
         const controller = new AbortController();
         setMoreProgressLoader(true)
         const api = username ? "/posts/profile/" + username + "?page=" + page : "/posts/timeline/" + user._id + "?page=" + page
-        const res = await axios.get(api, { signal: controller.signal, headers });
+        const res = await axios.get(api, { signal: controller.signal });
         if (res.data.status === "success" && res.data.posts.length > 0) {
             setPosts(posts => [...posts, ...res.data.posts]);
             setMoreProgressLoader(false)
@@ -108,23 +104,23 @@ function Feed({ username, name }) {
                                 :
                                 contentOver ?
                                     <button disabled className="feedBtn noPostsSpan">
-                                        <span >No more Posts To Show</span>
+                                        <span className="moreFeedBtn rightbarInfoValue noPostsSpan" >No more Posts To Show</span>
                                     </button>
                                     :
                                     posts.length !== 0 ?
                                         <button onClick={loadMorePosts} className="feedBtn moreFeedBtn">
-                                            <span>Load more</span>
+                                            <span className="rightbarInfoValue">Load more</span>
                                         </button>
                                         :
                                         user.username === username ?
-                                            <span className="noPostsSpan">you haven't share any Post</span>
+                                            <span className="moreFeedBtn rightbarInfoValue">you haven't share any Post</span>
                                             :
                                             <div className="peopleYouMayFollow">
                                                 {
                                                     name ?
                                                         name?.split(' ')[0] + " hasn't share any Post"
                                                         :
-                                                        < PeopleToFollow onUpdateFeed={updatedFeed} />
+                                                        <PeopleToFollow onUpdateFeed={updatedFeed} />
                                                 }
                                             </div>
 

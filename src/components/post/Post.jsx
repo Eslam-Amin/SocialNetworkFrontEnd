@@ -32,10 +32,7 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
     const [editFlagClicked, setEditFlagClicked] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const headers = {
-        'Authorization': `Bearer ${localStorage.getItem("token")}`,
-        'Content-Type': 'application/json'
-    };
+
     let menuRef = useRef();
     let postLikesRef = useRef();
     let postEditRef = useRef();
@@ -43,7 +40,7 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
     const likeHandler = async () => {
         try {
             setIsLoading(true);
-            await axios.put(HOST + "/posts/" + post._id + "/react", { userId: currentUser._id }, { headers })
+            await axios.put(HOST + "/posts/" + post._id + "/react", { userId: currentUser._id })
             setLike(like => isLiked ? like - 1 : like + 1);
             setIsliked(isLiked => !isLiked);
             setIsLoading(false);
@@ -80,7 +77,7 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
         if (post.userId === currentUser._id) {
             try {
                 deletePostAndUpdateFeed(post._id);
-                await axios.delete(`/posts/${post._id} `, { data: { userId: currentUser._id }, headers });
+                await axios.delete(`/posts/${post._id} `, { data: { userId: currentUser._id } });
                 enqueueSnackbar("post Deleted Successfully! ", { variant: "success" })
             } catch (err) {
                 enqueueSnackbar(err.response.data, { variant: 'error' });
@@ -113,7 +110,7 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
             if (post.userId === currentUser._id)
                 setUser(currentUser)
             const res = await axios.get(`/users?userId=${post.userId}`,
-                { signal: controller.signal, headers })
+                { signal: controller.signal })
             setUser(res.data.user);
         };
         fetchUserOfEachPost();
