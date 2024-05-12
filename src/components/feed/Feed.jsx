@@ -36,11 +36,10 @@ function Feed({ username, name }) {
             } catch (error) {
                 setCircleProgress(true);
                 console.log(error)
-                let errMsg;
-                if (error.message !== "canceled") {
-                    errMsg = error.response.data.message
-                    enqueueSnackbar(errMsg, { variant: "info" })
+                if (error.message !== "canceled" &&
+                    error.response?.data.status === "fail") {
                     localStorage.clear();
+                    enqueueSnackbar("you're not logged In, Please Login to gain Access", { variant: "info" })
                     setTimeout(() => {
                         window.location.reload();
                     }, 3000)

@@ -50,12 +50,9 @@ function PostEdit({ post, cancelPostEdit, user, editPostAndUpdateFeed }) {
                             :
                             "Save"
                     }</button>
-                    <button className="cancelBtn postEditBtn" disabled={loading} onClick={handleCancel}> {
-                        loading ?
-                            <Loader size="17px" />
-                            :
-                            "Cancel"
-                    }</button>
+                    <button className="cancelBtn postEditBtn" disabled={loading} onClick={handleCancel}>
+                        Cancel
+                    </button>
                 </div>
             </form>
         </div>

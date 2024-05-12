@@ -95,12 +95,8 @@ function UpdateUserInfo() {
                                         "Save"
                                 }
                             </button>
-                            <button className="cancelBtn btn" disabled={loading} onClick={goBack}> {
-                                loading ?
-                                    <Loader />
-                                    :
-                                    "Cancel"
-                            }
+                            <button className="cancelBtn btn" disabled={loading} onClick={goBack}>
+                                Cancel
                             </button>
 
                         </div>

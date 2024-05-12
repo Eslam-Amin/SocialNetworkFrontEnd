@@ -12,9 +12,6 @@ import Rightbar from "../../components/rightbar/Rightbar"
 import NotFound from "../../components/404 Component/notFound"
 import ProfileTop from "./profileTop";
 
-
-
-import { HOST } from "../../global-links"
 import Loader from "../../components/loader/Loader";
 
 function Profile() {
