@@ -3,6 +3,7 @@ import AuthReducer from "./AuthReducer";
 
 
 const getData = () => {
+
     const pathName = window.location.pathname;
     if (pathName !== "/login" && pathName !== "/register")
         window.location.replace("/login");
@@ -13,7 +14,6 @@ getData();
 const INITIAL_STATE = {
     // user: await getData().user,
     user: JSON.parse(localStorage.getItem("user")),
-    token: sessionStorage.getItem("token"),
     isFetching: false,
     error: false
 }

@@ -216,9 +216,8 @@ function Register() {
                                 <CircularProgress color="inherit" size="25px" />
                                 : "Sign Up"}</button>
                         <button className="registerRegisterBtn" onClick={handleLoginClick}>
-                            {isFetching ?
-                                <CircularProgress color="inherit" size="25px" />
-                                : "Log Into your Account"}</button>
+                            Log Into your Account
+                        </button>
                     </form>
                 </div>
             </div>

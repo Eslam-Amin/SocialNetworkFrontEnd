@@ -7,10 +7,8 @@ export default axios.create({
     withCredentials: true,
     headers: {
         'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     },
-
-
 });
 
 // update your token in axios instance
@@ -19,7 +17,6 @@ export const setAuthToken = (token) => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-        localStorage.setItem("token", token)
         console.log(axios.defaults.headers.common)
     } else {
         delete axios.defaults.headers.common['token'];

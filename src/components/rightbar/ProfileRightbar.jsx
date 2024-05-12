@@ -29,7 +29,7 @@ function ProfileRightbar({ user }) {
             try {
                 if (user?._id) {
                     setFriendsLoadingProgress(true)
-                    const res = await axios.get("/users/friends/" + user?._id, { headers });
+                    const res = await axios.get("/users/friends/" + user?._id);
                     setFriends(res.data.friendsList);
                     let flag = res.data.friendsList.filter((friend) =>
                         friend._id === currentUser._id)
@@ -67,9 +67,9 @@ function ProfileRightbar({ user }) {
         }
     };
 
-    const handleLogOutClick = (e) => {
+    const handleLogOutClick = async (e) => {
         localStorage.clear();
-        sessionStorage.clear();
+        await axios.get("/auth/clear-cookie")
         navigate("/login")
         window.location.reload();
     }

@@ -1,11 +1,10 @@
-import axios from './axios';
+import axios, { setAuthToken } from './axios';
 
 export const loginCall = async (userCredentials, dispatch) => {
     dispatch({ type: "LOGIN_START" });
     try {
         const res = await axios.post("/auth/login", userCredentials)
         // localStorage.setItem("token", (res.data.token));
-
         localStorage.setItem("user", JSON.stringify(res.data.user));
         // setAuthToken(res.data.token);// CALLING THIS FUNCTION
 
@@ -13,7 +12,7 @@ export const loginCall = async (userCredentials, dispatch) => {
         // sessionStorage.setItem("user", JSON.stringify(res.data.data.user));
     } catch (err) {
         console.log(err)
-        dispatch({ type: "LOGIN_FAILURE", payload: (err.response.error) });
+        dispatch({ type: "LOGIN_FAILURE", payload: (err) });
         return true;
     }
 }

@@ -76,9 +76,7 @@ function Login() {
                                 : "Log In"}
                         </button>
                         <button className="loginRegisterBtn" disabled={isFetching} onClick={handleRegisterClick}>
-                            {isFetching ?
-                                <CircularProgress color="inherit" size="25px" />
-                                : "Create a New Account"}
+                            Create a New Account
                         </button>
                     </form>
                 </div>

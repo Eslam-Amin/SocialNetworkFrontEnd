@@ -6,10 +6,12 @@ import axios from "../../axios.js";
 import { AuthContext } from "../../context/AuthContext";
 import Loader from "../loader/Loader";
 import PeopleToFollow from "../people you may follow/PeopleToFollow.jsx";
+import { useSnackbar } from 'notistack';
 
 
 function Feed({ username, name }) {
 
+    const { enqueueSnackbar } = useSnackbar();
 
 
     const { user } = useContext(AuthContext);
@@ -33,6 +35,16 @@ function Feed({ username, name }) {
                 setCircleProgress(false);
             } catch (error) {
                 setCircleProgress(true);
+                console.log(error)
+                let errMsg;
+                if (error.message !== "canceled") {
+                    errMsg = error.response.data.message
+                    enqueueSnackbar(errMsg, { variant: "info" })
+                    localStorage.clear();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000)
+                }
             }
         };
         fetchPosts();
