@@ -10,7 +10,6 @@ const getData = () => {
 }
 
 
-getData();
 const INITIAL_STATE = {
     // user: await getData().user,
     user: JSON.parse(localStorage.getItem("user")),

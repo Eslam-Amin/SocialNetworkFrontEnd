@@ -7,6 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 import Loader from "../loader/Loader";
 import PeopleToFollow from "../people you may follow/PeopleToFollow.jsx";
 import { useSnackbar } from 'notistack';
+import { jsonHeader } from "../../global-links"
 
 
 function Feed({ username, name }) {
@@ -28,7 +29,7 @@ function Feed({ username, name }) {
                 setCircleProgress(true);
 
                 const api = username ? "/posts/profile/" + username : "/posts/timeline/" + user._id
-                const res = await axios.get(api, { signal: controller.signal });
+                const res = await axios.get(api, { signal: controller.signal, headers: jsonHeader });
                 if (res.data.status === "success")
                     setPosts(res.data.posts);
 
@@ -42,7 +43,7 @@ function Feed({ username, name }) {
                     enqueueSnackbar("you're not logged In, Please Login to gain Access", { variant: "info" })
                     setTimeout(() => {
                         window.location.reload();
-                    }, 3000)
+                    }, 5000)
                 }
             }
         };

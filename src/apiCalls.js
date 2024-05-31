@@ -6,6 +6,7 @@ export const loginCall = (userCredentials, dispatch) => {
         axios.post("/auth/login", userCredentials)
             .then(res => res.data)
             .then(res => {
+                console.log(res.data)
                 localStorage.setItem("user", JSON.stringify(res.user))
                 dispatch({ type: "LOGIN_SUCCESS", payload: res.user });
             })

@@ -38,16 +38,21 @@ function FollowingIndvidiual({ user, onUpdateFeed, headers }) {
                     <img loading="lazy"
                         alt="" className="peopleToFollowImage"
                         src={user.profilePicture ? `${PF + user.profilePicture}` : `${PF}avatars/${user.gender}.png`} />
-                    <span className="rightbarFollowingName">
-                        {user.name}
-                        {user.isAdmin &&
-                            <span title="Verified Badge">
-                                <Star htmlColor="#1877f2" className="verifiedBadge" style={{ fontSize: smallWindow ? "1rem" : "1.2rem" }} />
-                            </span>
-                        }
-                    </span>
+                    <div className="leftNameDiv">
+                        <span className="rightbarFollowingName">
+                            {user.name}
+                            {
+                                user.isAdmin &&
+                                <span title="Verified Badge">
+                                    <Star htmlColor="#1877f2" className="verifiedBadge" style={{ fontSize: smallWindow ? "1rem" : "1.2rem" }} />
+                                </span>
+                            }
+                        </span>
+                        <span className="numberOfFollowers">{user.totalFollowers} Followers</span>
+                    </div>
+
                 </div>
-            </Link>
+            </Link >
             <button className="rightbarFollowBtn"
                 onClick={() => followUser(user)}
                 key={user._id}
@@ -61,7 +66,7 @@ function FollowingIndvidiual({ user, onUpdateFeed, headers }) {
                 }
 
             </button>
-        </div>
+        </div >
     )
 }
 

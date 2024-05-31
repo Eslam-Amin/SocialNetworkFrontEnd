@@ -3,9 +3,10 @@ import { Search, Person, Notifications, Chat, ArrowBackIos } from '@mui/icons-ma
 import { useState, useEffect, useContext, useRef } from "react";
 import { Link } from "react-router-dom"
 import { AuthContext } from "../../context/AuthContext";
-import axios from "axios";
+import axios from "../../axios";
 import SearchResults from "../search/SearchResults";
 import { HOST, PF } from "../../global-links"
+import { jsonHeader } from "../../global-links"
 
 function Topbar({ profile }) {
 
@@ -22,7 +23,7 @@ function Topbar({ profile }) {
         }
         else {
             try {
-                const res = await axios.get(HOST + "/users/search?username=" + username.current.value);
+                const res = await axios.get(HOST + "/users/search?username=" + username.current.value, { headers: jsonHeader });
                 setSearchResult(res.data);
                 setSearchOpened(true);
             }

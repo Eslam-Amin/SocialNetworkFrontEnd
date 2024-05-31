@@ -5,10 +5,7 @@ import { HOST } from "./global-links"
 export default axios.create({
     baseURL: HOST,
     withCredentials: true,
-    headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-    },
+
 });
 
 // update your token in axios instance

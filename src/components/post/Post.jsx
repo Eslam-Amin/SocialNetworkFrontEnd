@@ -12,6 +12,7 @@ import DropdownMenu from "../DropdownMenu/DropdownMenu";
 import Loader from "../loader/Loader";
 
 import { HOST, PF } from "../../global-links"
+import { jsonHeader } from "../../global-links"
 
 
 function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
@@ -40,7 +41,7 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
     const likeHandler = async () => {
         try {
             setIsLoading(true);
-            await axios.put(HOST + "/posts/" + post._id + "/react", { userId: currentUser._id })
+            await axios.put(HOST + "/posts/" + post._id + "/react", { userId: currentUser._id }, { headers: jsonHeader })
             setLike(like => isLiked ? like - 1 : like + 1);
             setIsliked(isLiked => !isLiked);
             setIsLoading(false);
@@ -160,7 +161,7 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed }) {
                 <div className="postTop">
                     <div className="postTopLeft">
                         <Link to={`/${user.username}`} className="linkClass">
-                            <img loading="lazy" src={user.profilePicture ? PF + user.profilePicture : `${PF}avatars/${user.gender}.png`} className="postProfileImg" alt="" />
+                            <img loading="lazy" src={currentUser.profilePicture ? PF + currentUser.profilePicture : `${PF}avatars/${user.gender}.png`} className="postProfileImg" alt="" />
                             <span className="postUsername">
                                 {user.name}
                                 {user.isAdmin &&

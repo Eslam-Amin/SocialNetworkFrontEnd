@@ -9,31 +9,32 @@ import { useState } from "react";
 import axios from '../../axios';
 import Loader from "../loader/Loader";
 import { PF } from "../../global-links"
+import { multiFormHeader } from "../../global-links"
 
 function Share({ refreshFeed, addPostAndUpdateFeed }) {
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false);
-    const headers = {
-        'Authorization': `Bearer ${localStorage.getItem("token")}`,
-        'Content-Type': 'application/json'
-    };
+    const [image, setImage] = useState(null)
+
     const { user } = useContext(AuthContext);
     const content = useRef();
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
-
     const handleShare = async (e) => {
 
         e.preventDefault();
         setLoading(true);
-        if (content.current.value.trim().length !== 0) {
-            const newPost = {
-                userId: user._id,
-                content: content.current.value.trim(),
-                createdAt: new Date().getTime(),
-                updatedAt: new Date().getTime()
-            }
+        if (content.current.value.trim().length !== 0 || 1) {
+
+            const formData = new FormData();
+            formData.append('postImage', image);
+            formData.append("updatedAt", new Date().getTime())
+            formData.append("createdAt", new Date().getTime())
+            formData.append("content", content.current.value.trim())
+
             try {
-                const newp = await axios.post("/posts", newPost, { headers });
+                const newp = await axios.post("/posts", formData, {
+                    headers: multiFormHeader,
+                });
                 addPostAndUpdateFeed(newp.data);
                 content.current.value = "";
             } catch (err) {
@@ -46,7 +47,10 @@ function Share({ refreshFeed, addPostAndUpdateFeed }) {
         setLoading(false);
     }
 
-
+    const handleFileChanged = (e) => {
+        e.preventDefault()
+        setImage(e.target.files[0]);
+    }
 
     return (
         <div className="share">
@@ -65,8 +69,15 @@ function Share({ refreshFeed, addPostAndUpdateFeed }) {
                     <div className="shareOptions">
                         <div className="shareOption">
                             <PermMedia htmlColor="tomato" className="shareIcon" style={{ fontSize: smallWindow ? "1rem" : "" }} />
-                            <span className="shareOptionText">Photo Or Video</span>
+                            <label htmlFor="postFile" className="shareOptionText">Photo Or Video</label>
                         </div>
+                        <input
+                            type="file"
+                            id="postFile"
+                            name="postFile"
+                            style={{ display: "none" }}
+                            onChange={handleFileChanged}
+                        />
                         <div className="shareOption">
                             <Label htmlColor="blue" className="shareIcon" style={{ fontSize: smallWindow ? "1rem" : "" }} />
                             <span className="shareOptionText">Tag</span>
@@ -82,8 +93,8 @@ function Share({ refreshFeed, addPostAndUpdateFeed }) {
                     </div>
                     <button className="shareBtn" type="submit">Share</button>
                 </form>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
 

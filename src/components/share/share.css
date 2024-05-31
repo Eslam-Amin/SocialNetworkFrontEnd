@@ -13,7 +13,6 @@
 
 .shareWrapper {
     padding: 10px;
-
 }
 
 .shareTop {
@@ -80,7 +79,7 @@
     }
 }
 
-.shareOption {
+.shareOption, .postFile{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -111,7 +110,7 @@
 .shareOptionText {
     font-size: 14px;
     font-weight: 500;
-
+    cursor: pointer;
     @media only screen and (max-width:480px) {
         font-size: x-small;
     }
@@ -132,3 +131,4 @@
 
     }
 }
+
