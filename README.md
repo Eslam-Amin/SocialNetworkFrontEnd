@@ -1,70 +1,102 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Social Network Frontend
 
-## Available Scripts
+Welcome to the Social Network Frontend repository. This frontend application provides the user interface for a social network platform similar to Facebook. Below you'll find documentation on the features, setup instructions, technologies used, and future enhancements.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- User authentication and authorization using JWT.
+- User-friendly interface to manage user accounts and posts.
+- Follow/unfollow functionality.
+- View posts on your timeline based on who you are following.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Technologies Used
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- React
+- Context API
+- Axios (for API requests)
+- JWT for authentication
 
-### `npm test`
+## Setup Instructions
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone the repository.
+   ```bash
+   git clone https://github.com/yourusername/social-network-frontend.git
+   ```
 
-### `npm run build`
+2. Install dependencies.
+   ```bash
+   cd social-network-frontend
+   npm install
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Set up environment variables.
+   - Create a `.env` file in the root directory.
+   - Add your backend API URL and any other required environment variables.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+4. Start the application.
+   ```bash
+   npm start
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Project Structure
 
-### `npm run eject`
+- `src/`
+  - `components/`: Contains reusable UI components.
+  - `context/`: Contains context and provider components for state management.
+  - `pages/`: Contains main pages of the application (e.g., Home, Profile, Login, Register).
+  - `services/`: Contains services for making API requests.
+  - `App.js`: Main application component.
+  - `index.js`: Entry point of the application.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Features
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Authentication
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **Login**
+  - Users can log in with their credentials to access protected routes.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **Register**
+  - Users can create a new account.
 
-## Learn More
+### User Management
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **View Profile**
+  - Users can view and edit their profile information.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Follow/Unfollow Users**
+  - Users can follow or unfollow other users.
 
-### Code Splitting
+### Post Management
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- **Create Post**
+  - Users can create a new post.
 
-### Analyzing the Bundle Size
+- **View Posts**
+  - Users can view posts on their timeline based on who they are following.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- **Edit Post**
+  - Users can edit their posts.
 
-### Making a Progressive Web App
+- **Delete Post**
+  - Users can delete their posts.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## State Management
 
-### Advanced Configuration
+- **Context API:**
+  - Used for state management across the application.
+  - Provides global state for user authentication and other essential data.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Deployment
 
-### Deployment
+This project has been deployed to Netlify. You can access it [here](https://social-media-network.netlify.app/).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Future Work
 
-### `npm run build` fails to minify
+To enhance the project further, consider the following:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Uploading Pictures:**
+  - Implement functionality to allow users to upload pictures with their posts.
+
+- **Real-time Chatting:**
+  - Integrate real-time chat functionality using Socket.io.
