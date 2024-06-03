@@ -8,10 +8,7 @@ import { AuthContext } from "../../context/AuthContext";
 import Loader from "../../components/loader/Loader";
 
 function UpdateUserInfo() {
-    const headers = {
-        'Authorization': `Bearer ${localStorage.getItem("token")}`,
-        'Content-Type': 'application/json'
-    };
+
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false)
@@ -41,11 +38,8 @@ function UpdateUserInfo() {
                 gender: gender.current.value !== "0" ? gender.current.value : user.gender,
                 password: password.current.value
             }
-            const res = await axios.put("/users/" + user._id, { ...updatedUserData, userId: user._id }, { headers });
-            // console.log(res.data)
-            //dispatch("UPDATE_USER", res.data.updatedUser);
+            const res = await axios.put("/users/" + user._id, { ...updatedUserData, userId: user._id });
             dispatch({ type: "UPDATE_USER", payload: res.data.updatedUser });
-            // localStorage.setItem("user", JSON.stringify(res.data.updatedUser))
             enqueueSnackbar("user Data Is Updated Successfully", { variant: "success" })
 
             navigate("/" + user?.username);

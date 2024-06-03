@@ -1,23 +1,30 @@
-import axios, { setAuthToken } from './axios';
+import axios from './axios';
 
-export const loginCall = (userCredentials, dispatch) => {
+export const loginCall = (userCredentials, dispatch, enqueueSnackbar) => {
     dispatch({ type: "LOGIN_START" });
-    try {
-        axios.post("/auth/login", userCredentials)
-            .then(res => res.data)
-            .then(res => {
-                console.log(res.data)
-                localStorage.setItem("user", JSON.stringify(res.user))
-                dispatch({ type: "LOGIN_SUCCESS", payload: res.user });
-            })
-            .catch(err => console.log(err))
-        // localStorage.setItem("token", (res.data.token));
-        // setAuthToken(res.data.token);// CALLING THIS FUNCTION
-
-        // sessionStorage.setItem("user", JSON.stringify(res.data.data.user));
-    } catch (err) {
-        console.log(err)
-        dispatch({ type: "LOGIN_FAILURE", payload: (err) });
-        return true;
-    }
+    axios.post("/auth/login", userCredentials)
+        .then(res => res.data)
+        .then(res => {
+            localStorage.setItem("userLoggedIn", true)
+            dispatch({ type: "LOGIN_SUCCESS", payload: res.user });
+            return res.user
+        })
+        .catch(err => {
+            dispatch({ type: "LOGIN_FAILURE", payload: (err) });
+            // console.log("err in apiCalls", err)
+            let errMsg;
+            try {
+                if (err.code === "ERR_NETWORK")
+                    errMsg = "Network Error, Please try in a minute";
+                else if (err.response?.data.status === "fail")
+                    errMsg = "Either mail or password is INVALID";
+                else
+                    errMsg = err.response.data.message
+                enqueueSnackbar(errMsg, { variant: "error" })
+                return err
+            } catch (err) {
+                console.log(err, " in apiCalls line 26")
+            }
+        }
+        )
 }

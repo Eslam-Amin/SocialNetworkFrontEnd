@@ -12,16 +12,12 @@ import { HOST, PF } from "../../global-links"
 
 function ProfileRightbar({ user }) {
 
-    const headers = {
-        'Authorization': `Bearer ${localStorage.getItem("token")}`,
-        'Content-Type': 'application/json'
-    };
     const [friends, setFriends] = useState([]);
     const { enqueueSnackbar } = useSnackbar();
 
     const { user: currentUser, dispatch } = useContext(AuthContext);
     const navigate = useNavigate();
-    const [followed, setFollowed] = useState(currentUser.followings?.includes(user?._id));
+    const [followed, setFollowed] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [friendsLoadingProgress, setFriendsLoadingProgress] = useState(false)
     useEffect(() => {
@@ -29,10 +25,10 @@ function ProfileRightbar({ user }) {
             try {
                 if (user?._id) {
                     setFriendsLoadingProgress(true)
-                    const res = await axios.get("/users/friends/" + user?._id, { headers });
-                    setFriends(res.data.friendsList);
-                    let flag = res.data.friendsList.filter((friend) =>
-                        friend._id === currentUser._id)
+                    const res = await axios.get("/users/followers/" + user?._id);
+                    setFriends(res.data.followers);
+                    let flag = res.data.followers.filter((follower) =>
+                        follower._id === currentUser._id)
                     flag.length === 0 ? setFollowed(false) : setFollowed(true)
                     setFriendsLoadingProgress(false)
                 }
@@ -49,21 +45,23 @@ function ProfileRightbar({ user }) {
     const handleFollowClick = async () => {
         try {
             setIsLoading(true);
-            let updatedUser = "";
+
             if (followed) {
-                updatedUser = await axios.put("/users/" + user._id + "/unfollow", { userId: currentUser._id }, { headers });
-                dispatch({ type: "UPDATE_USER", payload: updatedUser.data.updatedUser });
+                await axios.post("/users/" + user._id + "/unfollow");
+
                 setFriends(friends => friends.filter(friend => friend._id !== currentUser._id));
             }
             else {
-                updatedUser = await axios.put(HOST + "/users/" + user._id + "/follow", { userId: currentUser._id }, { headers });
-                dispatch({ type: "UPDATE_USER", payload: updatedUser.data.updatedUser });
+                await axios.post(HOST + "/users/" + user._id + "/follow");
+
                 setFriends(friends => [...friends, currentUser]);
             }
             setFollowed(followed => !followed);
-            setIsLoading(false);
         } catch (err) {
             enqueueSnackbar(followed ? "User Already Followed" : "User Already Unfollowed", { variant: "info" })
+        }
+        finally {
+            setIsLoading(false);
         }
     };
 

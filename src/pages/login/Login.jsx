@@ -23,13 +23,19 @@ function Login() {
         e.preventDefault();
         navigate("/register");
     }
+    const handleForgotPsswordClick = (e) => {
+        e.preventDefault();
+        navigate("/auth/forgot-password");
+    }
 
     const handleLoginClick = async (e) => {
         e.preventDefault();
-        const res = await loginCall({ email: email.current.value, password: password.current.value }, dispatch);
-        const errMsg = !error ? "Either mail or password is INVALID" : (error);
-        if (res)
-            enqueueSnackbar(errMsg, { variant: 'error' });
+        try {
+            loginCall({ email: email.current.value, password: password.current.value }, dispatch, enqueueSnackbar);
+        }
+        catch (err) {
+            console.log(err, " in Login line 37")
+        }
     }
 
 
@@ -69,7 +75,9 @@ function Login() {
                                     <VisibilityIcon className="visibleIcon" onClick={passwordVisibility} />
                             }
                         </span>
-                        <span className="loginForget">Forget Password?</span>
+                        <span className="loginForget"
+                            onClick={handleForgotPsswordClick}
+                            disabled={isFetching}>Forget Password?</span>
                         <button className="loginBtn" disabled={isFetching}>
                             {isFetching ?
                                 <CircularProgress color="inherit" size="25px" />

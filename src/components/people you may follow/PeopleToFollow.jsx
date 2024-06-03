@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 
 import FollowingIndvidiual from "./FollowingIndvidiual";
 import Loader from "../loader/Loader";
+import { useSnackbar } from 'notistack';
 
 function PeopleToFollow({ onUpdateFeed }) {
     const [users, setUsers] = useState();
@@ -13,6 +14,8 @@ function PeopleToFollow({ onUpdateFeed }) {
         'Authorization': `Bearer ${localStorage.getItem("token")}`,
         'Content-Type': 'application/json'
     };
+
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -25,6 +28,8 @@ function PeopleToFollow({ onUpdateFeed }) {
             }
             catch (err) {
                 console.log(err)
+                setLoading(false)
+                enqueueSnackbar("try again another time", { variant: "info" })
             }
         }
 

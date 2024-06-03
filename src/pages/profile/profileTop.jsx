@@ -101,12 +101,19 @@ function ProfileTop({
 
                 <div className="profilePictureSpan">
                     <label htmlFor="profilePicture">
-                        <img
-                            src={user?.profilePicture ? `${PF + currentUser.profilePicture}` : `${PF}avatars/${user.gender}.png`} alt="" className="profileUserImg" loading="lazy" />
+                        <img src={user?.profilePicture ? `${PF + user.profilePicture}` : `${PF}avatars/${user.gender}.png`} alt="" className="profileUserImg" loading="lazy" />
                     </label>
                     {
                         user?._id === currentUser?._id &&
                         <span className="profilePictureUpload">
+                            <input
+                                type="file"
+                                id="profilePicture"
+                                name="profilePicture"
+                                title="Upload Profile Picture"
+                                style={{ display: "none" }}
+                                onChange={handleFileChanged}
+                            />
                             {
                                 imageUpload ?
                                     uploadLoading ?
@@ -127,14 +134,6 @@ function ProfileTop({
                         </span>
                     }
                 </div>
-                <input
-                    type="file"
-                    id="profilePicture"
-                    name="profilePicture"
-                    title="Upload Profile Picture"
-                    style={{ display: "none" }}
-                    onChange={handleFileChanged}
-                />
             </div>
 
             <div className="profileInfo">

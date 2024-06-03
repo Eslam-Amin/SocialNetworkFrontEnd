@@ -31,6 +31,7 @@ function Register() {
     const navigate = useNavigate();
 
     const getUsernameFromNameEntry = (fname, lname) => {
+
         const username = fname.charAt(0).toUpperCase() + fname.slice(1).trim().toLowerCase()
             + lname.charAt(0).toUpperCase() + lname.slice(1).trim().toLowerCase();
         console.log(username);

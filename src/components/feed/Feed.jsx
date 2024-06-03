@@ -28,15 +28,15 @@ function Feed({ username, name }) {
             try {
                 setCircleProgress(true);
 
-                const api = username ? "/posts/profile/" + username : "/posts/timeline/" + user._id
+                const api = username ? "/posts/profile/" + username : "/posts/timeline/"
                 const res = await axios.get(api, { signal: controller.signal, headers: jsonHeader });
                 if (res.data.status === "success")
                     setPosts(res.data.posts);
 
                 setCircleProgress(false);
+                // setContentOver(posts?.length === 0)
             } catch (error) {
                 setCircleProgress(true);
-                console.log(error)
                 if (error.message !== "canceled" &&
                     error.response?.data.status === "fail") {
                     localStorage.clear();
@@ -55,7 +55,7 @@ function Feed({ username, name }) {
     }, [user._id, username])
 
     const updatedFeed = async () => {
-        const api = "/posts/timeline/" + user._id;
+        const api = "/posts/timeline/";
         const res = await axios.get(api);
         setPosts(res.data.posts)
     }
@@ -77,14 +77,20 @@ function Feed({ username, name }) {
     const loadMorePosts = async () => {
         const controller = new AbortController();
         setMoreProgressLoader(true)
-        const api = username ? "/posts/profile/" + username + "?page=" + page : "/posts/timeline/" + user._id + "?page=" + page
-        const res = await axios.get(api, { signal: controller.signal });
-        if (res.data.status === "success" && res.data.posts.length > 0) {
-            setPosts(posts => [...posts, ...res.data.posts]);
-            setMoreProgressLoader(false)
-            setPage(page => page + 1);
-        } else {
+        try {
+
+            const api = username ? "/posts/profile/" + username + "?page=" + page : "/posts/timeline?page=" + page
+            const res = await axios.get(api, { signal: controller.signal });
+            if (res.data.status === "success" && res.data.posts.length > 0) {
+                setPosts(posts => [...posts, ...res.data.posts]);
+                setPage(page => page + 1);
+            }
+        }
+        catch (err) {
             setContentOver(true)
+            console.log(err, ", in Feed Load more Posts")
+        }
+        finally {
             setMoreProgressLoader(false)
         }
     }
@@ -100,7 +106,8 @@ function Feed({ username, name }) {
                         <Loader cName="progress" />
                         :
                         posts?.map((p) => (
-                            <Post post={p} key={p?._id}
+                            <Post post={p} user={p.user} key={p?._id}
+                                updatedFeed={updatedFeed}
                                 deletePostAndUpdateFeed={deletePostAndUpdateFeed}
                                 editPostAndUpdateFeed={editPostAndUpdateFeed} />
                         ))
@@ -116,10 +123,10 @@ function Feed({ username, name }) {
                                 :
                                 contentOver ?
                                     <button disabled className="feedBtn noPostsSpan">
-                                        <span className="moreFeedBtn rightbarInfoValue noPostsSpan" >No more Posts To Show</span>
+                                        <span className="moreFeedBtn rightbarInfoValue noPostsSpan" >No Posts To Show</span>
                                     </button>
                                     :
-                                    posts.length !== 0 ?
+                                    posts?.length !== 0 && Array.isArray(posts) ?
                                         <button onClick={loadMorePosts} className="feedBtn moreFeedBtn">
                                             <span className="rightbarInfoValue">Load more</span>
                                         </button>

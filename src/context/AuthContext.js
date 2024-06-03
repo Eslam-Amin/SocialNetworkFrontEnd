@@ -1,18 +1,27 @@
 import { createContext, useReducer } from "react"
 import AuthReducer from "./AuthReducer";
+import axios from "../axios";
+import { HOST } from "../global-links";
 
 
-const getData = () => {
+const getData = async () => {
+    if (localStorage.getItem("userLoggedIn")) {
+        try {
+            const res = await axios.get(HOST + "/users/authenticate-user");
+            return res.data.user;
+        }
+        catch (err) {
+            console.log(err, " in getData line 14")
+        }
+    }
 
-    const pathName = window.location.pathname;
-    if (pathName !== "/login" && pathName !== "/register")
-        window.location.replace("/login");
+
 }
 
 
 const INITIAL_STATE = {
     // user: await getData().user,
-    user: JSON.parse(localStorage.getItem("user")),
+    user: await getData(),
     isFetching: false,
     error: false
 }

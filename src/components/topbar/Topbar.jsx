@@ -12,11 +12,10 @@ function Topbar({ profile }) {
 
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
     const { user } = useContext(AuthContext);
+    let searchRef = useRef();
     const username = useRef();
     const [searchResult, setSearchResult] = useState([]);
     const [searchOpened, setSearchOpened] = useState(false);
-    let searchRef = useRef();
-
     const searchUser = async () => {
         if (username.current.value.trim() === "") {
             setSearchOpened(false);
@@ -110,7 +109,7 @@ function Topbar({ profile }) {
 
                 </div>
                 <Link to={`/${user?.username}`}>
-                    < img loading="lazy" src={user.profilePicture ? `${PF + user.profilePicture}` : `${PF}avatars/${user.gender}.png`} alt="" className="topbarImg" />
+                    <img loading="lazy" src={user.profilePicture ? `${PF + user.profilePicture}` : `${PF}avatars/${user.gender}.png`} alt="" className="topbarImg" />
                 </Link>
             </div>
 

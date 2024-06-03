@@ -6,6 +6,8 @@ import Profile from './pages/profile/Profile';
 import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
 import UpdateUserInfo from './pages/updateUserInfo/UpdateUserInfo';
+import ForgotPassword from './pages/Forget Password/ForgotPassword';
+import ResetPassword from './pages/Reset Password/ResetPassword';
 
 function App() {
 
@@ -18,6 +20,8 @@ function App() {
         <Route path="/register" element={user ? <Navigate to="/" /> : <Register />} />
         <Route path="/:username" element={< Profile />} />
         <Route path="/update-user-info/:username" element={< UpdateUserInfo />} />
+        <Route path="/auth/forgot-password" element={< ForgotPassword />} />
+        <Route path="/auth/reset-password/:token" element={<ResetPassword />} />
       </Routes>
     </Router>
   );

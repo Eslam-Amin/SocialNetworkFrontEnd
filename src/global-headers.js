@@ -4,6 +4,7 @@ const multiFormHeader = {
 }
 
 const jsonHeader = {
+    //Access-Control-Allow-Origin: https://localhost:3000
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
 }
