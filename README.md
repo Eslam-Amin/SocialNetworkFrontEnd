@@ -81,6 +81,9 @@ Welcome to the Social Network Frontend repository. This frontend application pro
 - **Delete Post**
   - Users can delete their posts.
 
+- **Uploading Pictures:**
+  - Implement functionality to allow users to upload pictures with their posts.
+    
 ## State Management
 
 - **Context API:**
@@ -94,9 +97,6 @@ This project has been deployed to Netlify. You can access it [here](https://soci
 ## Future Work
 
 To enhance the project further, consider the following:
-
-- **Uploading Pictures:**
-  - Implement functionality to allow users to upload pictures with their posts.
 
 - **Real-time Chatting:**
   - Integrate real-time chat functionality using Socket.io.
