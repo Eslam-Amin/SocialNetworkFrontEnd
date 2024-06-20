@@ -2,6 +2,8 @@ import "./topbar.css"
 import { Search, Person, Notifications, Chat, ArrowBackIos } from '@mui/icons-material'
 import { useState, useEffect, useContext, useRef } from "react";
 import { Link } from "react-router-dom"
+import { useNavigate } from 'react-router-dom';
+
 import { AuthContext } from "../../context/AuthContext";
 import axios from "../../axios";
 import SearchResults from "../search/SearchResults";
@@ -16,6 +18,7 @@ function Topbar({ profile }) {
     const username = useRef();
     const [searchResult, setSearchResult] = useState([]);
     const [searchOpened, setSearchOpened] = useState(false);
+    const navigate = useNavigate();
     const searchUser = async () => {
         if (username.current.value.trim() === "") {
             setSearchOpened(false);
@@ -45,6 +48,12 @@ function Topbar({ profile }) {
             document.removeEventListener("click", closeOutSide);
         }
     })
+
+
+
+    const handleMessengerChat = () => {
+        navigate("/messenger");
+    }
     return (
         <div className="topbarContainer">
             {
@@ -94,10 +103,10 @@ function Topbar({ profile }) {
                         </span>
                     </div>
 
-                    <div className="topbarIconItem">
+                    <div className="topbarIconItem" onClick={handleMessengerChat}>
                         <Chat />
                         <span className="topbarIconBadge">
-                            6
+
                         </span>
                     </div>
                     <div className="topbarIconItem">
@@ -109,7 +118,11 @@ function Topbar({ profile }) {
 
                 </div>
                 <Link to={`/${user?.username}`}>
-                    <img loading="lazy" src={user.profilePicture ? `${PF + user.profilePicture}` : `${PF}avatars/${user.gender}.png`} alt="" className="topbarImg" />
+                    <img loading="lazy" src={user.profilePicture ?
+                        user.profilePicture.startsWith("http") ? user.profilePicture :
+                            PF + user.profilePicture : `${PF}avatars/${user.gender}.png`}
+                        alt=""
+                        className="topbarImg" />
                 </Link>
             </div>
 

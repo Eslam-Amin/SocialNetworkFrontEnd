@@ -99,4 +99,4 @@ This project has been deployed to Netlify. You can access it [here](https://soci
 To enhance the project further, consider the following:
 
 - **Real-time Chatting:**
-  - Integrate real-time chat functionality using Socket.io.
+  - Integrate real-time chat functionality using Socket.io. [Done✅]

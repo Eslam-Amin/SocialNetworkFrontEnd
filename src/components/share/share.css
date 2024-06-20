@@ -39,7 +39,7 @@
     border: none;
     width: 80%;
     unicode-bidi: plaintext;
-      resize: none; /* Prevent resizing to maintain centering */
+    resize: none; /* Prevent resizing to maintain centering */
 
 }
 

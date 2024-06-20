@@ -25,7 +25,7 @@ function Login() {
     }
     const handleForgotPsswordClick = (e) => {
         e.preventDefault();
-        navigate("/auth/forgot-password");
+        navigate("/authenticate/forgot-password");
     }
 
     const handleLoginClick = async (e) => {

@@ -23,10 +23,11 @@ function ProfileTop({
     const editDescReff = useRef();
     const [openedDescEdit, setOpenedDescEdit] = useState(false);
     const { user: currentUser, dispatch } = useContext(AuthContext);
+
     const [userDesc, setUserDesc] = useState(user?.desc);
     const [loading, setLoading] = useState(false);
     const [image, setImage] = useState("")
-    const [imageUpload, setimageUpload] = useState(false)
+    const [imageUpload, setImageUpload] = useState(false)
     const [uploadLoading, setUploadLoading] = useState(false)
     const handleUploadProfilePicture = async (e) => {
         e.preventDefault();
@@ -34,34 +35,35 @@ function ProfileTop({
             const formData = new FormData();
             if (image !== "") {
                 setUploadLoading(true)
-                formData.append('profilePicture', image);
-                const res = await axios.put('/users/upload/profilePicture', formData, {
+                formData.append('media', image);
+                const res = await axios.put('/users/upload/profile-picture', formData, {
                     headers: multiFormHeader,
                 });
-                console.log(res.data)
+                console.log(res.data.user)
                 dispatch({ type: "UPDATE_USER", payload: res.data.user });
-                localStorage.setItem("user", JSON.stringify(user))
-
             }
         } catch (err) {
+            if (err.code === "ERR_BAC_RESPONSE")
+                enqueueSnackbar("Please select a picture", { variant: "error" })
+            if (err.code === "ERR_BAD_REQUEST")
+                enqueueSnackbar(err.response.data.message, { variant: "error" })
             console.log(err)
         }
         finally {
-            setimageUpload(false)
+            setImageUpload(false)
             setUploadLoading(false)
         }
-        // setLoading(false);
     }
     const handleUploadPicture = (e) => {
         e.preventDefault()
-        setimageUpload(true)
+        setImageUpload(true)
     }
 
     const handleFileChanged = (e) => {
         e.preventDefault()
 
         setImage(e.target.files[0]);
-        setimageUpload(true)
+        setImageUpload(true)
     }
 
     const handleOpenEditDesc = () => {
@@ -84,11 +86,9 @@ function ProfileTop({
 
             setUserDesc(res.data.updatedUser.desc);
             enqueueSnackbar("Description Updated Successfully!", { variant: "success" })
-
             setOpenedDescEdit(false);
 
-            dispatch({ type: "UPDATE_USER", payload: res.data.user });
-            // localStorage.setItem("user", JSON.stringify(res.data.updatedUser))
+            dispatch({ type: "UPDATE_USER", payload: res.data.updatedUser });
             setLoading(false)
         } catch (err) {
             enqueueSnackbar(err, { variant: "error" })
@@ -101,7 +101,10 @@ function ProfileTop({
 
                 <div className="profilePictureSpan">
                     <label htmlFor="profilePicture">
-                        <img src={user?.profilePicture ? `${PF + user.profilePicture}` : `${PF}avatars/${user.gender}.png`} alt="" className="profileUserImg" loading="lazy" />
+                        <img loading="lazy" src={user.profilePicture ?
+                            user.profilePicture.startsWith("http") ? user.profilePicture :
+                                PF + user.profilePicture : `${PF}avatars/${user.gender}.png`} alt={user.name}
+                            className="profileUserImg" />
                     </label>
                     {
                         user?._id === currentUser?._id &&
@@ -125,9 +128,9 @@ function ProfileTop({
                                         <CheckCircleRoundedIcon htmlColor="green" onClick={handleUploadProfilePicture}
                                             style={{ cursor: "pointer", fontSize: smallWindow && "1.5rem", margin: smallWindow && "5px" }} />
                                     :
-                                    <label htmlFor="profilePicture">
-                                        <Edit style={{ fontSize: "15px", marginLeft: "10px", cursor: "pointer" }}
-                                            onClick={handleUploadPicture} />
+                                    <label onClick={handleUploadPicture}>
+                                        <Edit style={{ fontSize: "12px", marginLeft: "10px", cursor: "pointer" }}
+                                        />
                                     </label>
 
                             }

@@ -15,7 +15,9 @@ function SearchResults({ searchResult, search }) {
                         <ul className="searchItem">
                             <li>
 
-                                <img src={user.profilePicture ? PF + user.profilePicture : `${PF}avatars/${user.gender}.png`}
+                                <img loading="lazy" src={user.profilePicture ?
+                                    user.profilePicture.startsWith("http") ? user.profilePicture :
+                                        PF + user.profilePicture : `${PF}avatars/${user.gender}.png`}
                                     className="searchImg" alt="profile picture" />
                                 {user.name}
                             </li>

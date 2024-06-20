@@ -1,8 +1,6 @@
 .postEditWrapper{
-    position: fixed;
     width: 45%;
     height: 150px;
-
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -34,6 +32,7 @@
     min-height: 75px;
     width: 95%;
     unicode-bidi: plaintext;
+    resize: none;
 }
 
 

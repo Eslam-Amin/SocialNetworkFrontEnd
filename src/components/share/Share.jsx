@@ -11,10 +11,10 @@ import Loader from "../loader/Loader";
 import { PF } from "../../global-links"
 import { multiFormHeader } from "../../global-links"
 
-function Share({ refreshFeed, addPostAndUpdateFeed }) {
+function Share({ addPostAndUpdateFeed }) {
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false);
-    const [image, setImage] = useState(null)
+    const [image, setImage] = useState(false)
 
     const { user } = useContext(AuthContext);
     const content = useRef();
@@ -23,22 +23,31 @@ function Share({ refreshFeed, addPostAndUpdateFeed }) {
 
         e.preventDefault();
         setLoading(true);
-        if (content.current.value.trim().length !== 0 || 1) {
-
-            const formData = new FormData();
-            formData.append('postImage', image);
+        if (
+            image || content.current.value.trim().length !== 0
+        ) {
+            let formData = new FormData();
+            formData.append('media', image);
             formData.append("updatedAt", new Date().getTime())
             formData.append("createdAt", new Date().getTime())
             formData.append("content", content.current.value.trim())
 
             try {
+                content.current.value = "";
                 const newp = await axios.post("/posts", formData, {
                     headers: multiFormHeader,
                 });
                 addPostAndUpdateFeed(newp.data);
-                content.current.value = "";
             } catch (err) {
-
+                if (err.code === "ERR_BAC_RESPONSE")
+                    enqueueSnackbar("Please select a picture", { variant: "error" })
+                if (err.code === "ERR_BAD_REQUEST")
+                    enqueueSnackbar(err.response.data.error, { variant: "error" })
+                console.log(err)
+            }
+            finally {
+                formData = {}
+                setImage(false)
             }
         }
         else {
@@ -56,9 +65,12 @@ function Share({ refreshFeed, addPostAndUpdateFeed }) {
         <div className="share">
             <div className="shareWrapper">
                 <div className="shareTop">
-                    <img src={user.profilePicture ? `${PF + user.profilePicture}` : `${PF}avatars/${user.gender}.png`} alt="" className="shareProfileImg" />
+                    <img src={user.profilePicture ?
+                        user.profilePicture.startsWith("http") ? user.profilePicture :
+                            PF + user.profilePicture : `${PF}avatars/${user.gender}.png`}
+                        alt="" className="shareProfileImg" />
                     {
-                        loading ?
+                        (loading && image) ?
                             <Loader cName="sharePorfileImg" />
                             :
                             <textarea ref={content} type="text" className="shareInput" placeholder={`What's in Your Mind, ${user.name}?`} />
@@ -72,6 +84,7 @@ function Share({ refreshFeed, addPostAndUpdateFeed }) {
                             <label htmlFor="postFile" className="shareOptionText">Photo Or Video</label>
                         </div>
                         <input
+                            disabled={loading}
                             type="file"
                             id="postFile"
                             name="postFile"

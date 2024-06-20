@@ -145,7 +145,10 @@ function ProfileRightbar({ user }) {
                                         style={{ textDecoration: "none", color: "black" }}>
 
                                         <div className="rightbarFollowing" >
-                                            <img loading="lazy" src={friend.profilePicture ? `${PF + friend.profilePicture}` : `${PF}avatars/${friend.gender}.png`} alt="" className="rightbarFollowingImg" />
+                                            <img loading="lazy" src={friend.profilePicture ?
+                                                friend.profilePicture.startsWith("http") ? friend.profilePicture :
+                                                    PF + friend.profilePicture : `${PF}avatars/${friend.gender}.png`}
+                                                alt="" className="rightbarFollowingImg" />
                                             <span className="rightbarFollowingName">{friend.name}</span>
                                         </div>
                                     </Link>
@@ -153,7 +156,7 @@ function ProfileRightbar({ user }) {
                     }
 
 
-                </div >
+                </div>
             </div>
         </div >
     )

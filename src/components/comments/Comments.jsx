@@ -6,7 +6,8 @@ import CloseIcon from '@mui/icons-material/Close';
 function Comments({ user, post,
     handleCloseComments,
     postComments,
-    deleteCommentAndUpdateCommentSection,
+    onDeleteComment,
+    onUpdateComment
 }) {
 
 
@@ -29,7 +30,8 @@ function Comments({ user, post,
                             comment={comment}
                             user={user} post={post._id}
                             key={comment._id}
-                            deleteCommentAndUpdateCommentSection={deleteCommentAndUpdateCommentSection}
+                            onDeleteComment={onDeleteComment}
+                            onUpdateComment={onUpdateComment}
                         />
                     ))
                 }

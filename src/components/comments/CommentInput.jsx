@@ -30,7 +30,10 @@ function CommentInput({ post, user, updateNumberOfComments }) {
     return (
         <div className="commentSection">
             <Link to={`/${user.username}`} className="linkClass linkClassCommentSection">
-                <img loading="lazy" src={user.profilePicture ? PF + user.profilePicture : `${PF}avatars/${user.gender}.png`} className="postProfileImg" alt="" />
+                <img loading="lazy" src={user.profilePicture ?
+                    user.profilePicture.startsWith("http") ? user.profilePicture :
+                        PF + user.profilePicture : `${PF}avatars/${user.gender}.png`}
+                    className="postProfileImg" alt="" />
             </Link>
             <input ref={content} type="text"
                 className="commentInput" placeholder={`Write Your Comment`} />

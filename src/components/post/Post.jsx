@@ -17,7 +17,7 @@ import { HOST, PF } from "../../global-links"
 import { jsonHeader } from "../../global-links"
 
 
-function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed, user }) {
+function Post({ post, deletePostAndUpdateFeed, updatedFeed, editPostAndUpdateFeed, user }) {
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
 
     const { enqueueSnackbar } = useSnackbar();
@@ -45,6 +45,7 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed, user }) {
 
 
     let menuRef = useRef();
+    let newPost = useRef();
     let postLikesRef = useRef();
     let postCommentsRef = useRef();
     let postEditRef = useRef();
@@ -100,8 +101,9 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed, user }) {
     const handleDeletePost = async () => {
         if (post.user._id === currentUser._id) {
             try {
-                deletePostAndUpdateFeed(post._id);
                 await axios.delete(`/posts/${post._id} `, { data: { userId: currentUser._id } });
+                deletePostAndUpdateFeed(post._id);
+                await updatedFeed()
                 enqueueSnackbar("post Deleted Successfully! ", { variant: "success" })
             } catch (err) {
                 enqueueSnackbar(err.response.data, { variant: 'error' });
@@ -123,10 +125,20 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed, user }) {
             setMenuOpened(false)
         }
         else {
-            enqueueSnackbar("you can only edit your posts", { variant: 'error' });
+            enqueueSnackbar("you can only edit your posts", {
+                variant: 'error'
+            });
         }
     }
 
+    const editCommentAndUpdateComments = (comment, newComment) => {
+        console.log(postComments)
+        console.log(newComment)
+        const requiredComment = postComments.find(c => c._id === comment._id)
+        requiredComment.comment = newComment;
+        console.log(requiredComment)
+        setPostComments(postComments => [...postComments]);
+    }
     const deleteCommentAndUpdateCommentSection = (commentId) => {
         setPostComments(comments => comments.filter(comment => comment._id !== commentId));
         setPostNumOfComments(postNumOfComments => postNumOfComments - 1)
@@ -142,7 +154,7 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed, user }) {
             cleanUpCloseFunction(closeOutSide)
         }
     })
-    const updateNumberOfComments = (newPost) => {
+    const updateNumberOfComments = () => {
         setPostNumOfComments(postNumOfComments => postNumOfComments + 1)
     }
     const handleCloseComments = () => {
@@ -168,7 +180,10 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed, user }) {
                     <div className="postTop">
                         <div className="postTopLeft">
                             <Link to={`/${user.username}`} className="linkClass">
-                                <img loading="lazy" src={user.profilePicture ? PF + user.profilePicture : `${PF}avatars/${user.gender}.png`} className="postProfileImg" alt="" />
+                                <img loading="lazy" src={user.profilePicture ?
+                                    user.profilePicture.startsWith("http") ? user.profilePicture :
+                                        PF + user.profilePicture : `${PF}avatars/${user.gender}.png`}
+                                    className="postProfileImg" alt="" />
                                 <span className="postUsername">
                                     {user.name}
                                     {user.isAdmin &&
@@ -196,16 +211,7 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed, user }) {
                         </div>
                     </div>
 
-                    {
-                        editFlagClicked &&
-                        <div ref={postEditRef}>
-                            <PostEdit
-                                post={post}
-                                cancelPostEdit={cancelPostEdit}
-                                user={currentUser}
-                                editPostAndUpdateFeed={editPostAndUpdateFeed} />
-                        </div>
-                    }
+
 
 
                     {
@@ -214,7 +220,9 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed, user }) {
                             <Comments
                                 postComments={postComments}
                                 post={post} user={currentUser} handleCloseComments={handleCloseComments}
-                                deleteCommentAndUpdateCommentSection={deleteCommentAndUpdateCommentSection} />
+                                onDeleteComment={deleteCommentAndUpdateCommentSection}
+                                onUpdateComment={editCommentAndUpdateComments}
+                            />
                         </div>
                     }
                     {
@@ -225,10 +233,34 @@ function Post({ post, deletePostAndUpdateFeed, editPostAndUpdateFeed, user }) {
                     }
 
                     <div className="postCenter">
-                        <span className="postText">{post?.content} </span>
-                        {post.img ?
-                            <img className="postImg" src={PF + post?.img} alt="" /> : ""
+                        <>
+                            {
+                                editFlagClicked ?
+                                    <div ref={postEditRef}>
+                                        <PostEdit
+                                            post={post}
+                                            cancelPostEdit={cancelPostEdit}
+                                            user={currentUser}
+                                            editPostAndUpdateFeed={editPostAndUpdateFeed} />
+                                    </div>
+                                    :
+                                    <span className="postText" >
+                                        <>
+                                            {post?.content}
+                                        </>
+                                    </span>
+                            }
+                        </>
+                        {
+
+                            post.img &&
+                            <img loading="lazy" src={post?.img ?
+                                post?.img.startsWith("http") ? post?.img :
+                                    PF + post?.img : `${PF}/${post?.img}`}
+                                className="postImg" alt=""
+                            />
                         }
+
 
                     </div>
                     <div className="postBottom">

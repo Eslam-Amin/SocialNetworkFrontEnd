@@ -39,22 +39,25 @@ function PostEdit({ post, cancelPostEdit, user, editPostAndUpdateFeed }) {
     }
     return (
 
-        <div className="postEditWrapper" >
-            <form className="editWrapper">
-                <textarea className="editInput" autoFocus
-                    defaultValue={post.content} ref={newContent} />
-                <div className="editBottom">
-                    <button className="shareBtn postEditBtn" disabled={loading} onClick={handleEditPost}> {
-                        loading ?
-                            <Loader size="17px" />
-                            :
-                            "Save"
-                    }</button>
-                    <button className="cancelBtn postEditBtn" disabled={loading} onClick={handleCancel}>
-                        Cancel
-                    </button>
-                </div>
-            </form>
+        <div className="editComment">
+            <textarea ref={newContent} type="text"
+                className="commentInput" defaultValue={`${post.content}`} autoFocus
+            />
+            <div className="editBtns">
+                {
+                    <>
+                        <button className="editBtn saveEditBtn" disabled={loading} onClick={handleEditPost}>
+                            {
+                                loading ?
+                                    <Loader size="13px" />
+                                    :
+                                    "Save"
+                            }
+                        </button>
+                        <button className="editBtn cancelBtn" disabled={loading} onClick={handleCancel}>Cancel</button>
+                    </>
+                }
+            </div>
         </div>
 
     )

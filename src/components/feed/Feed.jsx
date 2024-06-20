@@ -40,10 +40,11 @@ function Feed({ username, name }) {
                 if (error.message !== "canceled" &&
                     error.response?.data.status === "fail") {
                     localStorage.clear();
+                    console.log(error)
                     enqueueSnackbar("you're not logged In, Please Login to gain Access", { variant: "info" })
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 5000)
+                    // setTimeout(() => {
+                    //     window.location.reload();
+                    // }, 5000)
                 }
             }
         };
@@ -79,12 +80,16 @@ function Feed({ username, name }) {
         setMoreProgressLoader(true)
         try {
 
-            const api = username ? "/posts/profile/" + username + "?page=" + page : "/posts/timeline?page=" + page
+            const api = username ? "/posts/profile/" + username + "?page=" + page
+                : "/posts/timeline?page=" + page
             const res = await axios.get(api, { signal: controller.signal });
+
             if (res.data.status === "success" && res.data.posts.length > 0) {
                 setPosts(posts => [...posts, ...res.data.posts]);
                 setPage(page => page + 1);
             }
+            else
+                setContentOver(true)
         }
         catch (err) {
             setContentOver(true)
@@ -123,10 +128,10 @@ function Feed({ username, name }) {
                                 :
                                 contentOver ?
                                     <button disabled className="feedBtn noPostsSpan">
-                                        <span className="moreFeedBtn rightbarInfoValue noPostsSpan" >No Posts To Show</span>
+                                        <span className="moreFeedBtn rightbarInfoValue noPostsSpan" >No More Posts To Show</span>
                                     </button>
                                     :
-                                    posts?.length !== 0 && Array.isArray(posts) ?
+                                    posts?.length > 0 && Array.isArray(posts) ?
                                         <button onClick={loadMorePosts} className="feedBtn moreFeedBtn">
                                             <span className="rightbarInfoValue">Load more</span>
                                         </button>
@@ -137,7 +142,11 @@ function Feed({ username, name }) {
                                             <div className="peopleYouMayFollow">
                                                 {
                                                     name ?
-                                                        name?.split(' ')[0] + " hasn't share any Post"
+                                                        <span className="moreFeedBtn rightbarInfoValue" >
+                                                            {
+                                                                name?.split(' ')[0] + " hasn't share any Post"
+                                                            }
+                                                        </span>
                                                         :
                                                         <PeopleToFollow onUpdateFeed={updatedFeed} />
                                                 }

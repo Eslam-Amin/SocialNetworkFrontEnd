@@ -78,13 +78,13 @@ function UpdateUserInfo() {
                         </select>
                         <input type="password" placeholder="password" className="updateUserInput" ref={password} />
 
-                        <div className="dividedDivs">
+                        <div className="dividedDivsEditEdition">
 
 
                             <button className="shareBtn btn" disabled={loading} onClick={saveData}>
                                 {
                                     loading ?
-                                        <Loader />
+                                        <Loader size="10px" />
                                         :
                                         "Save"
                                 }

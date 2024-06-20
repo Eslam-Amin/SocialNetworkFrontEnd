@@ -6,6 +6,7 @@ import { HOST } from "../global-links";
 
 const getData = async () => {
     if (localStorage.getItem("userLoggedIn")) {
+
         try {
             const res = await axios.get(HOST + "/users/authenticate-user");
             return res.data.user;

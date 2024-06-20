@@ -9,7 +9,7 @@ function HomeRightbar() {
         <div className="rightBar">
             <div className="rightBarWrapper">
                 <Advertisement />
-                <img loading="lazy" src={`${PF}ad.png`} alt="" className="rightBarAd" />
+                <img loading="lazy" src={`${PF}friendsImage.png`} alt="" className="rightBarAd" />
                 <h4 className="rightBarTitle">Online Friends</h4>
                 <ul className="rightBarFriendList">
                     {

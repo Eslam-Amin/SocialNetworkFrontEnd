@@ -19,7 +19,7 @@ function FollowingIndvidiual({ user, onUpdateFeed, headers }) {
 
             setLoading(true)
 
-            const res = await axios.put(`/users/${user._id}/follow`, { userId: currentUser._id })
+            const res = await axios.post(`/users/${user._id}/follow`, { userId: currentUser._id })
             dispatch({ type: "UPDATE_USER", payload: res.data.updatedUser });
 
             onUpdateFeed();
@@ -35,9 +35,10 @@ function FollowingIndvidiual({ user, onUpdateFeed, headers }) {
                 style={{ textDecoration: "none", color: "black" }}>
 
                 <div className="peopleToFollow" >
-                    <img loading="lazy"
-                        alt="" className="peopleToFollowImage"
-                        src={user.profilePicture ? `${PF + user.profilePicture}` : `${PF}avatars/${user.gender}.png`} />
+                    <img loading="lazy" src={user.profilePicture ?
+                        user.profilePicture.startsWith("http") ? user.profilePicture :
+                            PF + user.profilePicture : `${PF}avatars/${user.gender}.png`}
+                        alt="" className="peopleToFollowImage" />
                     <div className="leftNameDiv">
                         <span className="rightbarFollowingName">
                             {user.name}

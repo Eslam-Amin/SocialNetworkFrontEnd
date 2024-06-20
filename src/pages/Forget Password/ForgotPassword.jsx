@@ -28,9 +28,9 @@ function ForgotPassword() {
         else {
             try {
 
-                enqueueSnackbar("Please check your email", { variant: 'defualt' });
+                setEmailSent(true)
                 await axios.post(HOST + "/auth/forget-password", { email: email.current.value.trim() })
-                // setEmailSent(true)
+                enqueueSnackbar("Please check your email", { variant: 'defualt' });
             } catch (err) {
                 console.log(err)
             }
@@ -59,7 +59,7 @@ function ForgotPassword() {
                                 <button className="loginBtn" onClick={sendResetLink}>
                                     Send Reset Link
                                 </button>
-                                <button className="loginRegisterBtn" onClick={handleRegisterClick}>
+                                <button className="loginRegisterBtn" disabled={emailSent} onClick={handleRegisterClick}>
                                     Create a New Account
                                 </button>
                             </form>

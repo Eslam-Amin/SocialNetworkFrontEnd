@@ -21,7 +21,10 @@ function PostLikes({ postUsersLikes }) {
                         <Link to={`/${user?.username}`} className="linkClass" key={user?._id}>
                             <ul key={user._id} className="likeListData">
                                 <li>
-                                    <img src={user.profilePicture ? PF + user.profilePicture : `${PF}avatars/${user.gender}.png`} className="userLikeImg" alt="" />
+                                    <img loading="lazy" src={user.profilePicture ?
+                                        user.profilePicture.startsWith("http") ? user.profilePicture :
+                                            PF + user.profilePicture : `${PF}avatars/${user.gender}.png`}
+                                        className="userLikeImg" alt="" />
                                 </li>
                                 <li className="postUsername">{user.name}
                                     {
