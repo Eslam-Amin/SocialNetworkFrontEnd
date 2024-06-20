@@ -6,16 +6,17 @@ import { HOST } from "../global-links";
 
 const getData = async () => {
     if (localStorage.getItem("userLoggedIn")) {
-
         try {
             const res = await axios.get(HOST + "/users/authenticate-user");
             return res.data.user;
         }
         catch (err) {
             console.log(err, " in getData line 14")
+            localStorage.clear();
         }
     }
-
+    else
+        return false;
 
 }
 

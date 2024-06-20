@@ -36,15 +36,16 @@ function Feed({ username, name }) {
                 setCircleProgress(false);
                 // setContentOver(posts?.length === 0)
             } catch (error) {
+                console.log(error)
                 setCircleProgress(true);
                 if (error.message !== "canceled" &&
-                    error.response?.data.status === "fail") {
+                    (error.response?.data.status === "fail" || error.response?.data.status === "error")) {
                     localStorage.clear();
                     console.log(error)
                     enqueueSnackbar("you're not logged In, Please Login to gain Access", { variant: "info" })
-                    // setTimeout(() => {
-                    //     window.location.reload();
-                    // }, 5000)
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 5000)
                 }
             }
         };

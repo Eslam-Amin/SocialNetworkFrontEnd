@@ -45,7 +45,7 @@ function Profile() {
             catch (err) {
                 setLoading(false)
                 setIsUserFound(false);
-                console.log(err.response.data);
+                console.log(err.response.data, " in profile at 48");
             }
         };
         setOpenedDescEdit(false);

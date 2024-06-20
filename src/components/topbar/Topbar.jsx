@@ -19,6 +19,8 @@ function Topbar({ profile }) {
     const [searchResult, setSearchResult] = useState([]);
     const [searchOpened, setSearchOpened] = useState(false);
     const navigate = useNavigate();
+
+
     const searchUser = async () => {
         if (username.current.value.trim() === "") {
             setSearchOpened(false);
