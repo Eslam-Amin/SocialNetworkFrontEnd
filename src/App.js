@@ -18,7 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={user ? < Home /> : <Login />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
-        <Route path="/register" element={user ? <Navigate to="/" /> : <Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/messenger" element={user ? <Messenger /> : <Login />} />
         <Route path="/:username" element={user ? < Profile /> : <Login />} />
         <Route path="/update-user-info/:username" element={user ? < Profile /> : < UpdateUserInfo />} />
