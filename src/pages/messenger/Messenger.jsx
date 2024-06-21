@@ -8,23 +8,26 @@ import { AuthContext } from "../../context/AuthContext"
 import axios from "../../axios"
 import { io } from "socket.io-client"
 import { PF } from "../../global-links"
+import Loader from "../../components/loader/Loader";
+
 
 function Messenger() {
-
+    const smallWindow = window.matchMedia("(max-width:480px)").matches;
     const [conversations, setConversations] = useState([])
     const [currentChat, setCurrentChat] = useState(null);
     const [messages, setMessages] = useState([])
     const [arrivalMessage, setArrivalMessage] = useState(null)
     const [socket, setSocket] = useState(null);
+    const [noMoreMessages, setNoMoreMessages] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const newMessageRef = useRef();
     const scrollRef = useRef();
     const socketRef = useRef();
-    let searchRef = useRef();
     const username = useRef();
-
+    const [page, setPage] = useState(2);
     const [searchResult, setSearchResult] = useState([]);
     const [searchOpened, setSearchOpened] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const { user } = useContext(AuthContext)
 
@@ -48,12 +51,14 @@ function Messenger() {
             try {
                 const res = await axios.get("/message/" + currentChat?._id);
                 // console.log(res.data)
-                setMessages(res.data.messages)
+                setMessages([...res.data.messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))])
             } catch (error) {
                 console.log(error)
             }
         }
         getMessages()
+        setPage(2);
+        setNoMoreMessages(false);
     }, [currentChat])
 
     useEffect(() => {
@@ -85,9 +90,10 @@ function Messenger() {
         }
     }, [arrivalMessage, currentChat])
     //Whenever a message is sent it will scroll to it
-    useEffect(() => {
-        scrollRef.current?.scrollIntoView({ behavior: "smooth" })
-    }, [messages])
+    // useEffect(() => {
+
+    //     scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+    // }, [messages])
 
 
 
@@ -155,7 +161,6 @@ function Messenger() {
         }
     }
     const searchUser = async () => {
-        console.log(username.current.value)
         if (username.current.value.trim() === "") {
             setSearchOpened(false);
         }
@@ -172,9 +177,26 @@ function Messenger() {
         }
     }
 
+    const loadMoreMessages = async () => {
+        try {
+            setLoading(true);
+            const res = await axios.get("/message/" + currentChat?._id + "?page=" + page);
+            setMessages(messages => [...res.data.messages, ...messages].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)))
+            if (res.data.messages.length === 0) setNoMoreMessages(true)
+            setPage(page => page + 1);
+        } catch (error) {
+            console.log(error)
+        }
+        finally {
+            setLoading(false)
+        }
+    }
+    const handleScrollTo = () => {
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
     return (
         <>
-            <Topbar />
+            <Topbar messenger={true} />
 
             <div className="messenger">
                 <div className="chatMenu">
@@ -193,9 +215,10 @@ function Messenger() {
                                     <ul className="searchItemMessenger" onClick={() => handleCreateNewConversation(user._id)}>
                                         <li>
 
-                                            <img loading="lazy" src={user.profilePicture ?
-                                                user.profilePicture.startsWith("http") ? user.profilePicture :
-                                                    PF + user.profilePicture : `${PF}avatars/${user.gender}.png`}
+                                            <img loading="lazy"
+                                                src={user.profilePicture ?
+                                                    user.profilePicture.startsWith("http") ? user.profilePicture :
+                                                        PF + user.profilePicture : `${PF}avatars/${user.gender}.png`}
                                                 className="searchImg messengerSearchImg" alt="profile picture" />
 
                                         </li>
@@ -228,6 +251,24 @@ function Messenger() {
 
                                     <div className="chatBoxTop">
                                         {
+                                            loading ?
+                                                <Loader cName="progress messengerLoader" size="18px" />
+                                                :
+                                                noMoreMessages ?
+
+                                                    <span className="loadMoreMessages"
+                                                    >
+                                                        No More Messages To View
+                                                    </span>
+                                                    :
+                                                    <span className="loadMoreMessages"
+                                                        style={{ cursor: "pointer" }}
+                                                        onClick={loadMoreMessages}
+                                                    >
+                                                        Load More
+                                                    </span>
+                                        }
+                                        {
                                             messages.map((message) => (
                                                 <div ref={scrollRef}>
                                                     <Message message={message} own={message.sender._id === user._id} />
@@ -241,7 +282,12 @@ function Messenger() {
                                         <textarea className="chatMessageInput" ref={newMessageRef}
                                             // onChange={(e) => newMessageRef = e.target.value}
                                             placeholder="your message..." ></textarea>
-                                        <button className="chatSendBtn" onClick={handleSendMessage}> Send </button>
+
+                                        <button className="chatSendBtn" onClick={handleSendMessage}>
+                                            {smallWindow ?
+                                                ">" : "Send"
+                                            }
+                                        </button>
                                     </div>
                                 </>
                                 :

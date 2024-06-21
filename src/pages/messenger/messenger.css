@@ -24,6 +24,20 @@
     flex: 5.5;
 }
 
+.loadMoreMessages{
+    text-align: center;
+    color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+}
+.messengerLoader{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
 .chatBoxWrapper{
     display: flex;
     flex-direction: column;
@@ -32,7 +46,7 @@
 }
 
 .chatBoxTop{
-    height: 100%;
+    height: 90%;
     overflow-y: scroll;
     padding-right: 10px;
 }
@@ -42,6 +56,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    @media only screen and (max-width:480px) {
+        flex-direction: column;
+        position: relative;
+    }
 }
 
 .chatMessageInput{
@@ -50,11 +68,10 @@
     padding:  10px;
     unicode-bidi: plaintext;
     resize: none; /* Prevent resizing to maintain centering */
-     
-    @media only screen and (max-width:480px) {
-        position: relative;
-
+      @media only screen and (max-width:480px) {
+     width: calc(85% - 50px);
     }
+   
 
 }
 .chatSendBtn{
@@ -67,11 +84,18 @@
     color: white;
      
     @media only screen and (max-width:480px) {
-    
-    position: absolute;
-    bottom: 12px;
-    right: 30px;
-
+        width:32px;
+        height:32px;
+        border-radius:50%;
+        -moz-border-radius:50%;
+        -webkit-border-radius:50%;
+        position: absolute;
+        top: 0; 
+        bottom: 0; 
+        margin-top: auto; 
+        margin-bottom: auto;
+        right: 1px; 
+        font-weight: bold;
     }
 }
 

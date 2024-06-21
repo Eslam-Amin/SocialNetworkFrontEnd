@@ -10,7 +10,7 @@ import SearchResults from "../search/SearchResults";
 import { HOST, PF } from "../../global-links"
 import { jsonHeader } from "../../global-links"
 
-function Topbar({ profile }) {
+function Topbar({ profile, messenger }) {
 
     const smallWindow = window.matchMedia("(max-width:480px)").matches;
     const { user } = useContext(AuthContext);
@@ -59,7 +59,7 @@ function Topbar({ profile }) {
     return (
         <div className="topbarContainer">
             {
-                smallWindow ? profile ?
+                smallWindow ? (profile || messenger) ?
                     <div className="topbarLeft">
                         <Link to="/" style={{ textDecoration: "none" }}>
                             <span className="logo">

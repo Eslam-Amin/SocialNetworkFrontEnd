@@ -30,7 +30,7 @@ function ForgotPassword() {
 
                 setEmailSent(true)
                 await axios.post(HOST + "/auth/forget-password", { email: email.current.value.trim() })
-                enqueueSnackbar("Please check your email", { variant: 'defualt' });
+                enqueueSnackbar("Please check your email/Spam", { variant: 'defualt' });
             } catch (err) {
                 console.log(err)
             }
