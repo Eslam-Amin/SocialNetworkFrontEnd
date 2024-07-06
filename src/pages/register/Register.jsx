@@ -50,7 +50,8 @@ function Register() {
 
             const user = {
                 name: uname,
-                username: getUsernameFromNameEntry(fname.current.value, lname.current.value),
+                username: email.split("@")[0],
+                // username: getUsernameFromNameEntry(fname.current.value, lname.current.value),
                 email: email.current.value,
                 relationship: relationship.current.value,
                 gender: gender.current.value,
