@@ -43,6 +43,12 @@
     flex-direction: column;
     justify-content: space-between;
     position: relative;
+     
+    @media only screen and (max-width:480px) {
+    
+    height: 90vh;
+    }
+
 }
 
 .chatBoxTop{

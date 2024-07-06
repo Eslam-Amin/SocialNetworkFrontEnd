@@ -1,22 +1,19 @@
 import axios from 'axios';
 import { HOST } from "./global-links"
 
-
-export default axios.create({
+const axiosInstance = axios.create({
     baseURL: HOST,
-    withCredentials: true,
-
+    withCredentials: true
 });
 
-// update your token in axios instance
-export const setAuthToken = (token) => {
+axiosInstance.interceptors.request.use((config) => {
+    const token = localStorage.getItem("token");
     if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        axios.defaults.headers.common['Content-Type'] = 'application/json';
-
-        console.log(axios.defaults.headers.common)
-    } else {
-        delete axios.defaults.headers.common['token'];
-
+        config.headers.Authorization = `X-Auth-Bearer ${token}`;
     }
-};
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
+
+export default axiosInstance;

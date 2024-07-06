@@ -41,7 +41,7 @@ function PostEdit({ post, cancelPostEdit, user, editPostAndUpdateFeed }) {
 
         <div className="editComment">
             <textarea ref={newContent} type="text"
-                className="commentInput" defaultValue={`${post.content}`} autoFocus
+                className="commentInput editPostInput" defaultValue={`${post.content}`} autoFocus
             />
             <div className="editBtns">
                 {

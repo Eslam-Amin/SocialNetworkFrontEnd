@@ -59,15 +59,14 @@ function Topbar({ profile, messenger }) {
     return (
         <div className="topbarContainer">
             {
-                smallWindow ? (profile || messenger) ?
+                smallWindow ? (profile || messenger) &&
                     <div className="topbarLeft">
                         <Link to="/" style={{ textDecoration: "none" }}>
                             <span className="logo">
                                 <ArrowBackIos style={{ fontSize: "1.2rem" }} />
                             </span>
                         </Link>
-                    </div> :
-                    ""
+                    </div>
                     :
                     <div className="topbarLeft">
                         <Link to="/" style={{ textDecoration: "none" }}>

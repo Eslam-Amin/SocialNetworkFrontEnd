@@ -29,7 +29,7 @@ function Feed({ username, name }) {
                 setCircleProgress(true);
 
                 const api = username ? "/posts/profile/" + username : "/posts/timeline/"
-                const res = await axios.get(api, { signal: controller.signal, headers: jsonHeader });
+                const res = await axios.get(api, { signal: controller.signal });
                 if (res.data.status === "success")
                     setPosts(res.data.posts);
 

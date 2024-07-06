@@ -35,7 +35,9 @@
     resize: none;
 }
 
-
+.editPostInput{ 
+   height: 100px;
+}
 .editInput:focus{
     outline: none;
 }

@@ -90,10 +90,10 @@ function Messenger() {
         }
     }, [arrivalMessage, currentChat])
     //Whenever a message is sent it will scroll to it
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     scrollRef.current?.scrollIntoView({ behavior: "smooth" })
-    // }, [messages])
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+    }, [messages])
 
 
 
