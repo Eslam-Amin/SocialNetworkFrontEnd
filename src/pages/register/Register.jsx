@@ -50,7 +50,7 @@ function Register() {
 
             const user = {
                 name: uname,
-                username: email.split("@")[0],
+                username: email.current.value.split("@")[0],
                 // username: getUsernameFromNameEntry(fname.current.value, lname.current.value),
                 email: email.current.value,
                 relationship: relationship.current.value,
@@ -63,13 +63,19 @@ function Register() {
 
             try {
 
-                await axios.post(HOST + "/auth/register", user);
-                navigate("/login");
+                const res = await axios.post(HOST + "/auth/register", user);
+                enqueueSnackbar(res.data.msg + " Please, check you mail/spam", { variant: 'info' });
+
+                // navigate("/login");
             } catch (err) {
                 //console.log(Object.keys(err.response.data.keyValue)[0]);
                 enqueueSnackbar("Duplicated " + Object.keys(err.response.data.keyValue)[0], { variant: 'error' });
-                setIsfetching(false)
             }
+            finally {
+                setIsfetching(false)
+
+            }
+
 
         }
 
