@@ -5,10 +5,12 @@ export const loginCall = (userCredentials, dispatch, enqueueSnackbar) => {
     axios.post("/auth/login", userCredentials)
         .then(res => res.data)
         .then(res => {
+            if (!res.token)
+                enqueueSnackbar(res.msg + " Please, check you mail/spam", { variant: "info" })
+
             localStorage.setItem("token", `${res.token}`);
             localStorage.setItem("userLoggedIn", true)
             dispatch({ type: "LOGIN_SUCCESS", payload: res.user });
-
             return res.user
         })
         .catch(err => {

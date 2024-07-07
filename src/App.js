@@ -8,6 +8,7 @@ import { AuthContext } from './context/AuthContext';
 import UpdateUserInfo from './pages/updateUserInfo/UpdateUserInfo';
 import ForgotPassword from './pages/Forget Password/ForgotPassword';
 import ResetPassword from './pages/Reset Password/ResetPassword';
+import VerifyAccount from './pages/Verify Account/VerifyAccount';
 import Messenger from './pages/messenger/Messenger';
 
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/update-user-info/:username" element={user ? < Profile /> : < UpdateUserInfo />} />
         <Route path="/authenticate/forgot-password" element={< ForgotPassword />} />
         <Route path="/authenticate/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/authenticate/verify-account/:token" element={<VerifyAccount />} />
       </Routes>
     </Router>
   );
