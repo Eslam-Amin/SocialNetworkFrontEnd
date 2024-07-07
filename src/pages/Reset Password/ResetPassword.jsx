@@ -27,10 +27,11 @@ function ResetPassword() {
             enqueueSnackbar("Password Don't match", { variant: 'error' });
         else {
             try {
-
+                setLoading(true)
                 const res = await axios.post(`${HOST}/auth/reset-password/${token}`, { password: password.current.value.trim() })
                 dispatch({ type: "LOGIN_SUCCESS", payload: res.data.user });
                 localStorage.setItem("userLoggedIn", true)
+                localStorage.setItem("token", `${res.data.token}`);
                 navigate("/")
 
 
@@ -38,6 +39,9 @@ function ResetPassword() {
             catch (err) {
                 console.log(err)
                 enqueueSnackbar("Token is invalid or has expired, please send reset mail again.", { variant: 'error' });
+            }
+            finally {
+                setLoading(false)
             }
 
         }
@@ -64,7 +68,12 @@ function ResetPassword() {
                             onClick={handleLoginClick}
                         >Log Into your account</span>
                         <button className="loginBtn" onClick={handleResetPassword}>
-                            Reset Password
+                            {
+                                loading ?
+                                    <Loader />
+                                    :
+                                    "Reset Password"
+                            }
                         </button>
 
                     </form>
