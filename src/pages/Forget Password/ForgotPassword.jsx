@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import axios from "../../axios";
 import { HOST } from "../../global-links";
+import Loader from "../../components/loader/Loader"
 
 
 function ForgotPassword() {
@@ -10,6 +11,7 @@ function ForgotPassword() {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const [emailSent, setEmailSent] = useState(false)
+    const [loading, setLoading] = useState(false);
 
     const handleRegisterClick = (e) => {
         e.preventDefault();
@@ -27,12 +29,15 @@ function ForgotPassword() {
             enqueueSnackbar("Please Enter your email", { variant: 'defualt' });
         else {
             try {
-
-                setEmailSent(true)
+                setLoading(true)
                 await axios.post(HOST + "/auth/forget-password", { email: email.current.value.trim() })
-                enqueueSnackbar("Please check your email/Spam", { variant: 'defualt' });
+                enqueueSnackbar("Please check your email/Spam", { variant: 'info' });
+                setEmailSent(true)
             } catch (err) {
                 console.log(err)
+            }
+            finally {
+                setLoading(false)
             }
         }
     }
@@ -56,8 +61,13 @@ function ForgotPassword() {
                                 <span className="loginForget"
                                     onClick={handleLoginClick}
                                 >Log Into your account</span>
-                                <button className="loginBtn" onClick={sendResetLink}>
-                                    Send Reset Link
+                                <button className="loginBtn" onClick={sendResetLink} disabled={loading}>
+                                    {
+                                        loading ?
+                                            <Loader />
+                                            :
+                                            "Send Reset Link"
+                                    }
                                 </button>
                                 <button className="loginRegisterBtn" disabled={emailSent} onClick={handleRegisterClick}>
                                     Create a New Account

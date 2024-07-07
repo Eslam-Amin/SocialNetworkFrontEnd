@@ -1,11 +1,11 @@
-import { useRef, useContext } from "react";
+import { useRef, useContext, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import axios from "../../axios";
 import { HOST } from "../../global-links";
 import { useParams } from 'react-router-dom';
 import { AuthContext } from "../../context/AuthContext";
-
+import Loader from "../../components/loader/Loader"
 
 
 function ResetPassword() {
@@ -14,7 +14,7 @@ function ResetPassword() {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const { isFetching, dispatch } = useContext(AuthContext);
-
+    const [loading, setLoading] = useState(false);
     let { token } = useParams();
     console.log(token)
     const handleLoginClick = (e) => {
