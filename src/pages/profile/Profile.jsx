@@ -8,14 +8,14 @@ import Topbar from "../../components/topbar/Topbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Feed from "../../components/feed/Feed"
 import Rightbar from "../../components/rightbar/Rightbar"
-
+import { useSnackbar } from 'notistack';
 import NotFound from "../../components/404 Component/notFound"
 import ProfileTop from "./profileTop";
-
 import Loader from "../../components/loader/Loader";
 
 function Profile() {
 
+    const { enqueueSnackbar } = useSnackbar();
     const [openedDescEdit, setOpenedDescEdit] = useState(false);
     const username = useParams().username;
     const [user, setUser] = useState({ name: "" })
@@ -45,7 +45,15 @@ function Profile() {
             catch (err) {
                 setLoading(false)
                 setIsUserFound(false);
-                console.log(err.response.data, " in profile at 48");
+                if (err.message !== "canceled" &&
+                    (err.response?.data.status === "fail" || err.response?.data.status === "err")) {
+                    localStorage.clear();
+                    enqueueSnackbar(err.response?.data.message, { variant: "info" })
+                    // setTimeout(() => {
+                    //     window.location.reload();
+                    // }, 5000)
+                }
+                // console.log(err.response.data, " in profile at 48");
             }
         };
         setOpenedDescEdit(false);

@@ -36,13 +36,12 @@ function Feed({ username, name }) {
                 setCircleProgress(false);
                 // setContentOver(posts?.length === 0)
             } catch (error) {
-                console.log(error)
+                // console.log(error.response?.data.message)
                 setCircleProgress(true);
                 if (error.message !== "canceled" &&
                     (error.response?.data.status === "fail" || error.response?.data.status === "error")) {
+                    enqueueSnackbar(error.response?.data.message, { variant: "info" })
                     localStorage.clear();
-                    console.log(error)
-                    enqueueSnackbar("you're not logged In, Please Login to gain Access", { variant: "info" })
                     setTimeout(() => {
                         window.location.reload();
                     }, 5000)
