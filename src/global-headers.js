@@ -7,7 +7,7 @@ const jsonHeader = {
     // //Access-Control-Allow-Origin: https://localhost:3000
     // 'Access-Control-Allow-Origin': '*',
     // 'Content-Type': 'application/json',
-    Authorization: `Beare ${localStorage.getItem("token")}`
+    Authorization: `Bearer ${localStorage.getItem("token")}`
 }
 
 
