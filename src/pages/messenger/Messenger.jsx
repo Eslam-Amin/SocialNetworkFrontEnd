@@ -16,6 +16,7 @@ function Messenger() {
     const [conversations, setConversations] = useState([])
     const [currentChat, setCurrentChat] = useState(null);
     const [messages, setMessages] = useState([])
+    const [typing, setTyping] = useState(false)
     const [arrivalMessage, setArrivalMessage] = useState(null)
     const [socket, setSocket] = useState(null);
     const [noMoreMessages, setNoMoreMessages] = useState(false);
@@ -63,7 +64,8 @@ function Messenger() {
 
     useEffect(() => {
         //https://messengerbackend-yte5.onrender.com/
-        socketRef.current = io("https://messengerbackend-yte5.onrender.com/");
+        // socketRef.current = io("https://messengerbackend-yte5.onrender.com/");
+        socketRef.current = io("http://localhost:4000");
 
         socketRef.current.on("getMessage", data => {
             setArrivalMessage({
@@ -111,6 +113,21 @@ function Messenger() {
         })
     }, [user])
 
+    useEffect(() => {
+        socketRef.current.on("typing", data => {
+            if (data.receiverId === user._id) {
+                setTyping(true)
+            }
+        })
+    });
+
+    useEffect(() => {
+        socketRef.current.on("stopTyping", data => {
+            if (data.receiverId === user._id) {
+                setTyping(false)
+            }
+        })
+    });
 
     // useEffect(() => {
     //     socketRef.current.emit("disconnect")
@@ -132,6 +149,7 @@ function Messenger() {
                 conversation: currentChat._id
             };
             try {
+                stopTypingEvent()
                 const sentMessage = newMessageRef.current.value.trim();
                 newMessageRef.current.value = ""
 
@@ -191,6 +209,17 @@ function Messenger() {
             setLoading(false)
         }
     }
+    const typingEvent = (e) => {
+        if (newMessageRef.current.value)
+            socketRef.current.emit("typing", { sender: user, receiverId: currentChat.members.find(member => member._id !== user._id)._id })
+        else
+            stopTypingEvent()
+    };
+
+    const stopTypingEvent = () => {
+        socketRef.current.emit("stopTyping", { sender: user, receiverId: currentChat.members.find(member => member._id !== user._id)._id })
+    }
+
     const handleScrollTo = () => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" })
     }
@@ -278,9 +307,17 @@ function Messenger() {
                                         }
 
                                     </div>
+                                    <div id="chatTyping">
+                                        {
+                                            typing ?
+                                                <span>{currentChat.members.find(member => member._id !== user._id).name} is typing...</span>
+                                                :
+                                                <span></span>
+                                        }
+                                    </div>
                                     <div className="chatBoxBottom">
                                         <textarea className="chatMessageInput" ref={newMessageRef}
-                                            // onChange={(e) => newMessageRef = e.target.value}
+                                            onChange={(e) => typingEvent(e)}
                                             placeholder="your message..." ></textarea>
 
                                         <button className="chatSendBtn" onClick={handleSendMessage}>
